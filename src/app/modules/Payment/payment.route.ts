@@ -9,14 +9,14 @@ const router = express.Router();
 // stripe account onboarding
 router.post(
   "/stripe-account-onboarding",
-  auth(UserRole.USER, UserRole.BUSINESS_PARTNER),
+  auth(UserRole.USER, UserRole.AGENT),
   PaymentController.stripeAccountOnboarding
 );
 
 // create intent on stripe
 router.post(
   "/create-payment-intent/:serviceType/:bookingId",
-  auth(UserRole.USER, UserRole.BUSINESS_PARTNER),
+  auth(UserRole.USER, UserRole.AGENT),
   PaymentController.createStripePaymentIntent
 );
 
@@ -30,14 +30,14 @@ router.post(
 // cancel booking stripe
 router.post(
   "/stripe-cancel-booking/:serviceType/:bookingId",
-  auth(UserRole.USER, UserRole.BUSINESS_PARTNER),
+  auth(UserRole.USER, UserRole.AGENT),
   PaymentController.cancelStripeBooking
 );
 
 // checkout session on stripe
 router.post(
   "/create-stripe-checkout-session-website/:serviceType/:bookingId",
-  auth(UserRole.USER, UserRole.BUSINESS_PARTNER),
+  auth(UserRole.USER, UserRole.AGENT),
   PaymentController.createStripeCheckoutSessionWebsite
 );
 

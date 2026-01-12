@@ -52,12 +52,7 @@ router.get(
 // get single channel
 router.get(
   "/channel/:channelId",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.USER,
-    UserRole.BUSINESS_PARTNER
-  ),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER, UserRole.AGENT),
   messageControllers.getSingleChannel
 );
 

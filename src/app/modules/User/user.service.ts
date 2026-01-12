@@ -408,7 +408,7 @@ const getAllBusinessPartners = async (
 
   // Filter for active users and role BUSINESS_PARTNER only
   filters.push({
-    role: UserRole.BUSINESS_PARTNER,
+    role: UserRole.AGENT,
     status: UserStatus.ACTIVE,
   });
 
@@ -529,7 +529,7 @@ const getAllNeededApprovedPartners = async (
 
   // Filter for inactive users and role BUSINESS_PARTNER only
   filters.push({
-    role: UserRole.BUSINESS_PARTNER,
+    role: UserRole.AGENT,
     status: UserStatus.INACTIVE,
   });
 
@@ -703,7 +703,7 @@ const getUserById = async (id: string): Promise<SafeUser> => {
 // get user by only partner
 const getPartnerById = async (id: string): Promise<SafeUser> => {
   const user = await prisma.user.findUnique({
-    where: { id, role: UserRole.BUSINESS_PARTNER },
+    where: { id, role: UserRole.AGENT },
     select: {
       id: true,
       fullName: true,

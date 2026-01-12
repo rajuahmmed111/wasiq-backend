@@ -40,34 +40,21 @@ router.get(
 //get my profile
 router.get(
   "/my-profile",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.BUSINESS_PARTNER,
-    UserRole.USER
-  ),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.AGENT, UserRole.USER),
   UserController.getMyProfile
 );
 
 // get user by id
 router.get(
   "/:id",
-  auth(
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN,
-    UserRole.USER,
-    UserRole.BUSINESS_PARTNER
-  ),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER, UserRole.AGENT),
   UserController.getUserById
 );
 
 // get user only partner
 router.get(
   "/inactive-partner/:id",
-  auth(
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN,
-  ),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   UserController.getPartnerById
 );
 
@@ -120,12 +107,7 @@ router.patch(
 // single update user (info + profile image)
 router.patch(
   "/update",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.BUSINESS_PARTNER,
-    UserRole.USER
-  ),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.AGENT, UserRole.USER),
   uploadFile.profileImage,
   parseBodyData,
   validateRequest(userValidation.updateUserZodSchema),
@@ -135,12 +117,7 @@ router.patch(
 // update user profile image
 router.patch(
   "/profile-img-update",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.BUSINESS_PARTNER,
-    UserRole.USER
-  ),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.AGENT, UserRole.USER),
   uploadFile.profileImage,
   UserController.updateUserProfileImage
 );
@@ -148,7 +125,7 @@ router.patch(
 // delete my account
 router.patch(
   "/my-account",
-  auth(UserRole.USER, UserRole.BUSINESS_PARTNER),
+  auth(UserRole.USER, UserRole.AGENT),
   UserController.deleteMyAccount
 );
 

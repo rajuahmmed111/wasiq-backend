@@ -14,7 +14,7 @@ generator client {
 
 enum UserRole {
   USER
-  BUSINESS_PARTNER
+  AGENT
   ADMIN
   SUPER_ADMIN
 }
@@ -106,7 +106,6 @@ model User {
   // Stripe
   stripeAccountId   String?
   isStripeConnected Boolean @default(false)
-
 
   // notification Preferences
   supportNotification Boolean @default(true)

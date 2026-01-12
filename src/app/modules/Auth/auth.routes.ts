@@ -16,31 +16,20 @@ router.post("/social-login", AuthController.socialLogin);
 // website login after booking
 router.post("/login-website", AuthController.loginWebsite);
 
-
 // refresh token
 router.post("/refresh-token", AuthController.refreshToken);
 
 // user logout route
 router.post(
   "/logout",
-  auth(
-    UserRole.USER,
-    UserRole.BUSINESS_PARTNER,
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN
-  ),
+  auth(UserRole.USER, UserRole.AGENT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   AuthController.logoutUser
 );
 
 //change password
 router.put(
   "/change-password",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.USER,
-    UserRole.BUSINESS_PARTNER
-  ),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER, UserRole.AGENT),
   validateRequest(authValidation.changePasswordValidationSchema),
   AuthController.changePassword
 );
