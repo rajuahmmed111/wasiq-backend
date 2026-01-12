@@ -23,20 +23,6 @@ router.get(
   UserController.getAllAdmins
 );
 
-// get all business partners
-router.get(
-  "/business-partners",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.getAllBusinessPartners
-);
-
-// get all needed approved partners
-router.get(
-  "/approved-partners",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.getAllNeededApprovedPartners
-);
-
 //get my profile
 router.get(
   "/my-profile",
@@ -49,13 +35,6 @@ router.get(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER, UserRole.AGENT),
   UserController.getUserById
-);
-
-// get user only partner
-router.get(
-  "/inactive-partner/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.getPartnerById
 );
 
 // create user
@@ -76,34 +55,6 @@ router.post(
 // verify user
 router.post("/verify-user", UserController.verifyOtpAndCreateUser);
 
-// update partner status (inactive to active)
-router.patch(
-  "/update-partner-status-active/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.updatePartnerStatusInActiveToActive
-);
-
-// update partner status rejected
-router.patch(
-  "/update-partner-status-reject/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.updatePartnerStatusRejected
-);
-
-// update admin status (inactive to active)
-router.patch(
-  "/update-admin-status-active/:id",
-  auth(UserRole.SUPER_ADMIN),
-  UserController.updateAdminStatusInActiveToActive
-);
-
-// update admin status rejected
-router.patch(
-  "/update-admin-status-reject/:id",
-  auth(UserRole.SUPER_ADMIN),
-  UserController.updateAdminStatusRejected
-);
-
 // single update user (info + profile image)
 router.patch(
   "/update",
@@ -114,14 +65,6 @@ router.patch(
   UserController.updateUser
 );
 
-// update user profile image
-router.patch(
-  "/profile-img-update",
-  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.AGENT, UserRole.USER),
-  uploadFile.profileImage,
-  UserController.updateUserProfileImage
-);
-
 // delete my account
 router.patch(
   "/my-account",
@@ -129,25 +72,11 @@ router.patch(
   UserController.deleteMyAccount
 );
 
-// update admin access only for super admin
-router.patch(
-  "/update-super-admin-access/:id",
-  auth(UserRole.SUPER_ADMIN),
-  UserController.updateAdminAccess
-);
-
 // delete user
 router.delete(
   "/:id",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   UserController.deleteUser
-);
-
-// delete admin
-router.delete(
-  "/admin/:id",
-  auth(UserRole.SUPER_ADMIN),
-  UserController.deleteAdmin
 );
 
 export const userRoute = router;
