@@ -8,28 +8,12 @@ import { settingValidation } from "./setting.validation";
 const router = express.Router();
 
 // get about App
-router.get(
-  "/about",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.PROPERTY_OWNER,
-    UserRole.SERVICE_PROVIDER,
-    UserRole.USER
-  ),
-  SettingController.getAbout
-);
+router.get("/about", auth(), SettingController.getAbout);
 
 // get customer contact info
 router.get(
   "/customer-contact",
-  auth(
-    UserRole.SUPER_ADMIN,
-    UserRole.ADMIN,
-    UserRole.PROPERTY_OWNER,
-    UserRole.SERVICE_PROVIDER,
-    UserRole.USER
-  ),
+  auth(),
   SettingController.getCustomerContactInfo
 );
 

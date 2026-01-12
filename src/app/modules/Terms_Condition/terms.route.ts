@@ -7,17 +7,7 @@ import { TermsController } from "./terms.controller";
 const router = express.Router();
 
 // get terms and conditions
-router.get(
-  "/",
-  auth(
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN,
-    UserRole.USER,
-    UserRole.PROPERTY_OWNER,
-    UserRole.SERVICE_PROVIDER
-  ),
-  TermsController.getTerms
-);
+router.get("/", auth(), TermsController.getTerms);
 
 // create or update terms and conditions
 router.post(

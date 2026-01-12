@@ -16,16 +16,6 @@ router.patch(
 );
 
 // get all privacy policy
-router.get(
-  "/",
-  auth(
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN,
-    UserRole.USER,
-    UserRole.PROPERTY_OWNER,
-    UserRole.SERVICE_PROVIDER
-  ),
-  PrivacyController.getAllPolicy
-);
+router.get("/", auth(), PrivacyController.getAllPolicy);
 
 export const privacyPolicyRoute = router;

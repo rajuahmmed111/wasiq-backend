@@ -94,16 +94,12 @@ model User {
   password        String     @default("123456")
   profileImage    String     @default("https://i.ibb.co/Ps9gZ8DD/Profile-image.png")
   contactNumber   String?
+  dateOfBirth     DateTime?
   address         String?
   country         String?
   role            UserRole   @default(USER)
   status          UserStatus @default(ACTIVE)
   fcmToken        String?    @default("")
-  age             Int?
-  dateOfBirth     DateTime?
-  profession      String?
-  gender          String?
-  companyName     String?
   isEmailVerified Boolean    @default(false)
   isPhoneVerified Boolean    @default(false)
 
@@ -111,13 +107,6 @@ model User {
   stripeAccountId   String?
   isStripeConnected Boolean @default(false)
 
-  // Pay-stack
-  payStackMerchantId  String?
-  isPayStackConnected Boolean @default(false)
-
-  // Sub-account info for pay-stack
-  payStackSubAccountId String?
-  payStackSubAccount   String?
 
   // notification Preferences
   supportNotification Boolean @default(true)
