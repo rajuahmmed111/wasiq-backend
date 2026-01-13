@@ -29,7 +29,7 @@ router.post(
 //change password
 router.put(
   "/change-password",
-  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER, UserRole.AGENT),
+  auth(UserRole.USER, UserRole.AGENT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(authValidation.changePasswordValidationSchema),
   AuthController.changePassword
 );
@@ -43,6 +43,7 @@ router.post("/verify-otp", AuthController.verifyOtp);
 // reset password
 router.post(
   "/reset-password",
+  // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   validateRequest(authValidation.resetPasswordSchema),
   AuthController.resetPassword
 );
