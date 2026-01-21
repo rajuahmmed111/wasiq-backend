@@ -1,12 +1,15 @@
-import { DayTrip as PrismaDayTrip } from "@prisma/client";
+import { TripService } from "@prisma/client";
 
-export type IDayTrip = Omit<PrismaDayTrip, "id" | "createdAt" | "updatedAt"> & {
+export type ITripService = Omit<
+  TripService,
+  "id" | "createdAt" | "updatedAt"
+> & {
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
 
-export type IDayTripFilters = {
+export type ITripServiceFilters = {
   search?: string;
   from?: string;
   to?: string;
@@ -16,8 +19,8 @@ export type IDayTripFilters = {
   isPopular?: boolean;
 };
 
-export type IDayTripResponse = {
-  data: IDayTrip[];
+export type ITripServiceResponse = {
+  data: ITripService[];
   meta?: {
     total: number;
     page: number;

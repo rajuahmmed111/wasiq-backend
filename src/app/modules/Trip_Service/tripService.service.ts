@@ -1,16 +1,16 @@
-import { DayTrip, Prisma } from "@prisma/client";
+import { Prisma, TripService } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
-import { IDayTrip, IDayTripFilters } from "./dayTrip.interface";
+import { ITripService, ITripServiceFilters } from "./tripService.interface";
 import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
 
-// create day trip
-const createDayTrip = async (
+// create trip service
+const createTripService = async (
   userId: string,
-  payload: IDayTrip,
-): Promise<DayTrip> => {
+  payload: ITripService,
+): Promise<TripService> => {
   // check if user exists
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -19,7 +19,7 @@ const createDayTrip = async (
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  const result = await prisma.dayTrip.create({
+  const result = await prisma.tripService.create({
     data: {
       ...payload,
       userId: user.id,
@@ -38,16 +38,16 @@ const createDayTrip = async (
   return result;
 };
 
-// get all day trips
-const getAllDayTrips = async (
-  filters: IDayTripFilters,
+// get all trip services
+const getAllTripServices = async (
+  filters: ITripServiceFilters,
   options: IPaginationOptions,
-): Promise<{ data: DayTrip[]; meta: any }> => {
+): Promise<{ data: TripService[]; meta: any }> => {
   const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
   const { search, from, to, minPrice, maxPrice, routeType, isPopular } =
     filters;
 
-  const andConditions: Prisma.DayTripWhereInput[] = [];
+  const andConditions: Prisma.TripServiceWhereInput[] = [];
 
   // search condition
   if (search) {
@@ -88,11 +88,11 @@ const getAllDayTrips = async (
     andConditions.push({ isPopular: isPopular });
   }
 
-  const whereConditions: Prisma.DayTripWhereInput = {
+  const whereConditions: Prisma.TripServiceWhereInput = {
     AND: andConditions,
   };
 
-  const result = await prisma.dayTrip.findMany({
+  const result = await prisma.tripService.findMany({
     where: whereConditions,
     include: {
       user: {
@@ -111,7 +111,7 @@ const getAllDayTrips = async (
         : { createdAt: "desc" },
   });
 
-  const total = await prisma.dayTrip.count({
+  const total = await prisma.tripService.count({
     where: whereConditions,
   });
 
@@ -127,9 +127,9 @@ const getAllDayTrips = async (
   };
 };
 
-// get single day trip
-const getSingleDayTrip = async (id: string): Promise<DayTrip> => {
-  const result = await prisma.dayTrip.findUnique({
+// get single trip service
+const getSingleTripService = async (id: string): Promise<TripService> => {
+  const result = await prisma.tripService.findUnique({
     where: { id },
     include: {
       user: {
@@ -143,31 +143,31 @@ const getSingleDayTrip = async (id: string): Promise<DayTrip> => {
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Day trip not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Trip service not found");
   }
 
   return result;
 };
 
-// update day trip
-const updateDayTrip = async (
+// update trip service
+const updateTripService = async (
   id: string,
   userId: string,
-  payload: Partial<IDayTrip>,
-): Promise<DayTrip> => {
-  // check if day trip exists and belongs to user
-  const existingDayTrip = await prisma.dayTrip.findFirst({
+  payload: Partial<ITripService>,
+): Promise<TripService> => {
+  // check if trip service exists and belongs to user
+  const existingTripService = await prisma.tripService.findFirst({
     where: { id, userId },
   });
 
-  if (!existingDayTrip) {
+  if (!existingTripService) {
     throw new ApiError(
       httpStatus.NOT_FOUND,
-      "Day trip not found or you don't have permission",
+      "Trip service not found or you don't have permission",
     );
   }
 
-  const result = await prisma.dayTrip.update({
+  const result = await prisma.tripService.update({
     where: { id },
     data: payload,
     include: {
@@ -184,21 +184,24 @@ const updateDayTrip = async (
   return result;
 };
 
-// delete day trip
-const deleteDayTrip = async (id: string, userId: string): Promise<DayTrip> => {
-  // check if day trip exists and belongs to user
-  const existingDayTrip = await prisma.dayTrip.findFirst({
+// delete trip service
+const deleteTripService = async (
+  id: string,
+  userId: string,
+): Promise<TripService> => {
+  // check if trip service exists and belongs to user
+  const existingTripService = await prisma.tripService.findFirst({
     where: { id, userId },
   });
 
-  if (!existingDayTrip) {
+  if (!existingTripService) {
     throw new ApiError(
       httpStatus.NOT_FOUND,
-      "Day trip not found or you don't have permission",
+      "Trip service not found or you don't have permission",
     );
   }
 
-  const result = await prisma.dayTrip.delete({
+  const result = await prisma.tripService.delete({
     where: { id },
     include: {
       user: {
@@ -214,9 +217,9 @@ const deleteDayTrip = async (id: string, userId: string): Promise<DayTrip> => {
   return result;
 };
 
-// get popular day trips
-const getPopularDayTrips = async (): Promise<DayTrip[]> => {
-  const result = await prisma.dayTrip.findMany({
+// get popular trip services
+const getPopularTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
     where: {
       isPopular: true,
       isService: "AVAILABLE",
@@ -240,11 +243,11 @@ const getPopularDayTrips = async (): Promise<DayTrip[]> => {
   return result;
 };
 
-export const DayTripService = {
-  createDayTrip,
-  getAllDayTrips,
-  getSingleDayTrip,
-  updateDayTrip,
-  deleteDayTrip,
-  getPopularDayTrips,
+export const TripServiceService = {
+  createTripService,
+  getAllTripServices,
+  getSingleTripService,
+  updateTripService,
+  deleteTripService,
+  getPopularTripServices,
 };
