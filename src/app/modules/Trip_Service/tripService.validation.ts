@@ -19,7 +19,7 @@ const createTripServiceValidationSchema = z.object({
     .positive("Distance must be a positive number")
     .optional(),
   groupType: z.string().min(1, "Group type is required"),
-  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
+  //   images: z.array(z.string().url("Each image must be a valid URL")).optional(),
   description: z.string().min(10, "Description must be at least 10 characters"),
   serviceType: z
     .enum(["DAY_TRIP", "MULTI_DAY_TOUR", "PRIVATE_TRANSFER"])
@@ -53,7 +53,7 @@ const updateTripServiceValidationSchema = z.object({
     .positive("Distance must be a positive number")
     .optional(),
   groupType: z.string().min(1, "Group type is required").optional(),
-  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
+  //   images: z.array(z.string().url("Each image must be a valid URL")).optional(),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters")
