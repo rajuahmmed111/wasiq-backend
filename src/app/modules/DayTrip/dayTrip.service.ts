@@ -3,29 +3,8 @@ import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
 import { IDayTrip, IDayTripFilters } from "./dayTrip.interface";
-
-// pagination options interface
-interface IPaginationOptions {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
-// pagination helper
-const paginationHelpers = {
-  calculatePagination: (options: IPaginationOptions) => {
-    const page = Number(options.page) || 1;
-    const limit = Number(options.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    return {
-      page,
-      limit,
-      skip,
-    };
-  },
-};
+import { IPaginationOptions } from "../../../interfaces/paginations";
+import { paginationHelpers } from "../../../helpars/paginationHelper";
 
 // create day trip
 const createDayTrip = async (
@@ -64,7 +43,7 @@ const getAllDayTrips = async (
   filters: IDayTripFilters,
   options: IPaginationOptions,
 ): Promise<{ data: DayTrip[]; meta: any }> => {
-  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
   const { search, from, to, minPrice, maxPrice, routeType, isPopular } =
     filters;
 

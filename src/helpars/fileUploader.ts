@@ -50,6 +50,20 @@ const allowedTypes = [
   "application/json",
   "application/octet-stream",
 
+  // audio types
+  "audio/mpeg", // MP3
+  "audio/wav", // WAV
+  "audio/ogg", // OGG
+  "audio/webm", // WEBM
+  "audio/aac", // AAC
+  "audio/flac", // FLAC
+  "audio/x-m4a", // M4A
+  "audio/mp4", // MP4 (audio)
+  "audio/x-ms-wma", // WMA
+  "audio/m4a", // M4A
+  "audio/x-wav", // WAV
+  "audio/x-ms-wax", // WAX
+
   // video types
   "video/mp4", // MP4
   "video/mpeg", // MPEG
@@ -68,7 +82,7 @@ const allowedTypes = [
 const fileFilter = (
   req: Express.Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback
+  cb: multer.FileFilterCallback,
 ) => {
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
@@ -127,7 +141,7 @@ cloudinary.config({
 
 // Cloudinary uploader function
 const uploadToCloudinary = async (
-  file: IUploadedFile
+  file: IUploadedFile,
 ): Promise<ICloudinaryUploadResponse | undefined> => {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(file.path)) {
@@ -159,7 +173,7 @@ const uploadToCloudinary = async (
         } else {
           resolve(result as ICloudinaryUploadResponse | undefined);
         }
-      }
+      },
     );
   });
 };

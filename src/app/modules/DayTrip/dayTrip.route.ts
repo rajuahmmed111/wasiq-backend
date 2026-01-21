@@ -10,7 +10,7 @@ const router = express.Router();
 // create day trip
 router.post(
   "/",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.AGENT),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(DayTripValidation.createDayTripValidationSchema),
   DayTripController.createDayTrip,
 );
@@ -36,7 +36,6 @@ router.patch(
 router.delete(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.AGENT),
-  validateRequest(DayTripValidation.paramsValidationSchema),
   DayTripController.deleteDayTrip,
 );
 

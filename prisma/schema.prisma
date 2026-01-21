@@ -156,7 +156,7 @@ model DayTrip {
   groupType    String
   image        String[]
   description  String
-  isPopular    Boolean            @default(true)
+  isPopular    Boolean            @default(false)
   bookingCount Int?               @default(0) // 1.2k+ times this month
   features     Json? // Free cancellation, 24/7 support, professional drivers
   routeType    String?            @default("city_to_city") // airport_transfer, city_to_city, etc.
@@ -183,7 +183,7 @@ model MultiDayTour {
   groupType    String
   image        String[]
   description  String
-  isPopular    Boolean            @default(true)
+  isPopular    Boolean            @default(false)
   bookingCount Int?               @default(0) // 1.2k+ times this month
   features     Json? // Free cancellation, 24/7 support, professional drivers
   routeType    String?            @default("multi_day_tour") // airport_transfer, city_to_city, etc.
@@ -211,7 +211,7 @@ model PrivateTransfer {
   groupType    String
   image        String[]
   description  String
-  isPopular    Boolean            @default(true)
+  isPopular    Boolean            @default(false)
   bookingCount Int?               @default(0) // 1.2k+ times this month
   features     Json? // Free cancellation, 24/7 support, professional drivers
   routeType    String?            @default("airport_transfer") // airport_transfer, city_to_city, etc.

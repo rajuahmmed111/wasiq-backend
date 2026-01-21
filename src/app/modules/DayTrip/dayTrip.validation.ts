@@ -7,9 +7,9 @@ const createDayTripValidationSchema = z.object({
   price: z.number().positive("Price must be a positive number"),
   duration: z.string().min(1, "Duration is required"),
   groupType: z.string().min(1, "Group type is required"),
-  image: z
-    .array(z.string().url("Each image must be a valid URL"))
-    .min(1, "At least one image is required"),
+  //   image: z
+  //     .array(z.string().url("Each image must be a valid URL"))
+  //     .min(1, "At least one image is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   isPopular: z.boolean().optional().default(false),
   bookingCount: z.number().int().min(0).optional().default(0),
@@ -28,10 +28,10 @@ const updateDayTripValidationSchema = z.object({
   price: z.number().positive("Price must be a positive number").optional(),
   duration: z.string().min(1, "Duration is required").optional(),
   groupType: z.string().min(1, "Group type is required").optional(),
-  image: z
-    .array(z.string().url("Each image must be a valid URL"))
-    .min(1, "At least one image is required")
-    .optional(),
+  //   image: z
+  //     .array(z.string().url("Each image must be a valid URL"))
+  //     .min(1, "At least one image is required")
+  //     .optional(),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters")
@@ -46,44 +46,7 @@ const updateDayTripValidationSchema = z.object({
   reviewCount: z.number().int().min(0).optional(),
 });
 
-// query filters validation schema
-const dayTripFiltersValidationSchema = z.object({
-  search: z.string().optional(),
-  from: z.string().optional(),
-  to: z.string().optional(),
-  minPrice: z
-    .string()
-    .transform((val) => (val ? parseFloat(val) : undefined))
-    .optional(),
-  maxPrice: z
-    .string()
-    .transform((val) => (val ? parseFloat(val) : undefined))
-    .optional(),
-  routeType: z.string().optional(),
-  isPopular: z
-    .string()
-    .transform((val) => val === "true")
-    .optional(),
-  page: z
-    .string()
-    .transform((val) => parseInt(val) || 1)
-    .optional(),
-  limit: z
-    .string()
-    .transform((val) => parseInt(val) || 10)
-    .optional(),
-  sortBy: z.string().optional(),
-  sortOrder: z.enum(["asc", "desc"]).optional(),
-});
-
-// params validation schema
-const paramsValidationSchema = z.object({
-  id: z.string().min(1, "ID is required"),
-});
-
 export const DayTripValidation = {
   createDayTripValidationSchema,
   updateDayTripValidationSchema,
-  dayTripFiltersValidationSchema,
-  paramsValidationSchema,
 };
