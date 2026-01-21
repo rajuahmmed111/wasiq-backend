@@ -35,7 +35,10 @@ const createTripService = catchAsync(async (req: Request, res: Response) => {
     images: imageUrls.length > 0 ? imageUrls : [],
   };
 
-  const result = await TripServiceService.createTripService(userId, finalTripServiceData);
+  const result = await TripServiceService.createTripService(
+    userId,
+    finalTripServiceData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -140,16 +143,18 @@ const deleteTripService = catchAsync(async (req: Request, res: Response) => {
 });
 
 // get popular trip services
-const getPopularTripServices = catchAsync(async (req: Request, res: Response) => {
-  const result = await TripServiceService.getPopularTripServices();
+const getPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getPopularTripServices();
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Popular trip services retrieved successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Popular trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
 
 export const TripServiceController = {
   createTripService,
