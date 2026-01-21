@@ -18,7 +18,7 @@ import { faqRoutes } from "../modules/Faq/faq.routre";
 import { messageRoutes } from "../modules/Message/message.route";
 import { investorRelationsRoutes } from "../modules/Investor_Relations/investor.route";
 import { notificationsRoute } from "../modules/Notification/notification.route";
-// import { rewardsRoute } from "../modules/Fasify_Rewards/rewards.route";
+import { dayTripRoutes } from "../modules/DayTrip/dayTrip.route";
 
 const router = express.Router();
 
@@ -30,6 +30,11 @@ const moduleRoutes = [
   {
     path: "/auth",
     route: authRoutes,
+  },
+
+  {
+    path: "/day-trips",
+    route: dayTripRoutes,
   },
 
   {
