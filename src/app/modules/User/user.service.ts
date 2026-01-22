@@ -41,6 +41,19 @@ const createUser = async (payload: any) => {
       ...payload,
       password: hashedPassword,
     },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      profileImage: true,
+      contactNumber: true,
+      address: true,
+      country: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    }
   });
 
   return user;

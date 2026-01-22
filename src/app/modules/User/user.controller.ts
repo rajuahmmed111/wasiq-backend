@@ -18,7 +18,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "OTP generated and sent to email successfully",
+    message: "User created successfully",
     data: result,
   });
 });
@@ -35,7 +35,7 @@ const createRoleSupperAdmin = catchAsync(
       message: "OTP generated and sent to email successfully",
       data: result,
     });
-  }
+  },
 );
 
 // verify user
@@ -49,7 +49,7 @@ const verifyOtpAndCreateUser = catchAsync(
       message: "User verified successfully",
       data: result,
     });
-  }
+  },
 );
 
 // get all users
