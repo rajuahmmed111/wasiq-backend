@@ -40,31 +40,32 @@ const createUser = async (payload: any) => {
     data: {
       ...payload,
       password: hashedPassword,
-      status: UserStatus.INACTIVE,
     },
   });
 
-  // generate OTP
-  const randomOtp = Math.floor(1000 + Math.random() * 9000).toString();
-  // 5 minutes
-  const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+  return user;
 
-  // prepare email html
-  const html = createOtpEmailTemplate(randomOtp);
+  // // generate OTP
+  // const randomOtp = Math.floor(1000 + Math.random() * 9000).toString();
+  // // 5 minutes
+  // const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
-  // send email
-  await emailSender("OTP Verification", user.email, html);
+  // // prepare email html
+  // const html = createOtpEmailTemplate(randomOtp);
 
-  // update user with OTP + expiry
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { otp: randomOtp, otpExpiry },
-  });
+  // // send email
+  // await emailSender("OTP Verification", user.email, html);
 
-  return {
-    message: "OTP sent to your email",
-    email: user.email,
-  };
+  // // update user with OTP + expiry
+  // await prisma.user.update({
+  //   where: { id: user.id },
+  //   data: { otp: randomOtp, otpExpiry },
+  // });
+
+  // return {
+  //   message: "OTP sent to your email",
+  //   email: user.email,
+  // };
 };
 
 // create role for supper admin
@@ -121,7 +122,7 @@ const verifyOtpAndCreateUser = async (email: string, otp: string) => {
     await prisma.user.delete({ where: { id: user.id } });
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      "OTP has expired, please register again"
+      "OTP has expired, please register again",
     );
   }
 
@@ -156,7 +157,7 @@ const verifyOtpAndCreateUser = async (email: string, otp: string) => {
 // get all users
 const getAllUsers = async (
   params: IFilterRequest,
-  options: IPaginationOptions
+  options: IPaginationOptions,
 ): Promise<IGenericResponse<SafeUser[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatedPagination(options);
 
@@ -248,7 +249,7 @@ const getAllUsers = async (
 // get all admins
 const getAllAdmins = async (
   params: IFilterRequest,
-  options: IPaginationOptions
+  options: IPaginationOptions,
 ): Promise<IGenericResponse<SafeUser[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatedPagination(options);
 
@@ -357,7 +358,7 @@ const getUserById = async (id: string): Promise<SafeUser> => {
 const updateUser = async (
   id: string,
   updates: IUpdateUser,
-  file?: IUploadedFile
+  file?: IUploadedFile,
 ): Promise<SafeUser> => {
   const user = await prisma.user.findUnique({
     where: { id, status: UserStatus.ACTIVE },
@@ -444,7 +445,7 @@ const deleteMyAccount = async (userId: string) => {
 // delete user
 const deleteUser = async (
   userId: string,
-  loggedId: string
+  loggedId: string,
 ): Promise<User | void> => {
   if (!ObjectId.isValid(userId)) {
     throw new ApiError(400, "Invalid user ID format");

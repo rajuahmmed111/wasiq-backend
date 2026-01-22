@@ -1,7 +1,7 @@
 import { UserRole, UserStatus } from "@prisma/client";
 
 export type TUser = {
-  fullName?: string;
+  fullName: string;
   email: string;
   password: string;
   profileImage?: string;

@@ -3,7 +3,7 @@ import { UserRole, UserStatus } from "@prisma/client";
 
 const createUserZodSchema = z.object({
   body: z.object({
-    fullName: z.string().optional(),
+    fullName: z.string({ required_error: "Full name is required" }),
     email: z
       .string({ required_error: "Email is required" })
       .email("Please provide a valid email address"),
@@ -30,7 +30,6 @@ export const updateUserZodSchema = z.object({
     profileImage: z.string().optional(),
   }),
 });
-
 
 export const userValidation = {
   createUserZodSchema,
