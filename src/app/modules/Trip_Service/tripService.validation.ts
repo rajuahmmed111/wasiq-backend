@@ -41,7 +41,12 @@ const createTripServiceValidationSchema = z.object({
       .string()
       .min(10, "Description must be at least 10 characters"),
     serviceType: z
-      .enum(["DAY_TRIP", "MULTI_DAY_TOUR", "PRIVATE_TRANSFER"])
+      .enum([
+        "DAY_TRIP",
+        "MULTI_DAY_TOUR",
+        "PRIVATE_TRANSFER",
+        "AIRPORT_TRANSFER",
+      ])
       .default("DAY_TRIP"),
     routeType: z.string().optional().default("city_to_city"),
     isPopular: z

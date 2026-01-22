@@ -29,6 +29,7 @@ enum ServiceType {
   DAY_TRIP
   MULTI_DAY_TOUR
   PRIVATE_TRANSFER
+  AIRPORT_TRANSFER
 }
 
 enum RouteType {
