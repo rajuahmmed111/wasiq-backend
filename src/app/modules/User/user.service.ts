@@ -53,7 +53,7 @@ const createUser = async (payload: any) => {
       status: true,
       createdAt: true,
       updatedAt: true,
-    }
+    },
   });
 
   return user;
