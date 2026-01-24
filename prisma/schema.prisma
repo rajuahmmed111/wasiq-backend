@@ -26,6 +26,7 @@ enum UserStatus {
 }
 
 enum ServiceType {
+  BY_THE_HOUR
   DAY_TRIP
   MULTI_DAY_TOUR
   PRIVATE_TRANSFER
