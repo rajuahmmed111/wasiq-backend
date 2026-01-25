@@ -89,7 +89,9 @@ const getByTheHourTripServices = catchAsync(
 // get all trip services BY_THE_HOUR and isPopular
 const getByTheHourPopularTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getByTheHourPopularTripServices();
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getByTheHourPopularTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -103,7 +105,8 @@ const getByTheHourPopularTripServices = catchAsync(
 // get all trip services BY_THE_DAY
 const getDayTripTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getDayTripTripServices();
+    const options = pick(req.query, paginationFields);
+    const result = await TripServiceService.getDayTripTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -117,7 +120,9 @@ const getDayTripTripServices = catchAsync(
 // get all trip services BY_THE_DAY and isPopular
 const getDayTripPopularTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getDayTripPopularTripServices();
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getDayTripPopularTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -131,7 +136,9 @@ const getDayTripPopularTripServices = catchAsync(
 // get all trip services MULTI_DAY_TOUR
 const getMultiDayTourTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getMultiDayTourTripServices();
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getMultiDayTourTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -145,8 +152,9 @@ const getMultiDayTourTripServices = catchAsync(
 // get all trip services MULTI_DAY_TOUR and isPopular
 const getMultiDayTourPopularTripServices = catchAsync(
   async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
     const result =
-      await TripServiceService.getMultiDayTourPopularTripServices();
+      await TripServiceService.getMultiDayTourPopularTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -161,7 +169,9 @@ const getMultiDayTourPopularTripServices = catchAsync(
 // get all trip services PRIVATE_TRANSFER
 const getPrivateTransferTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getPrivateTransferTripServices();
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getPrivateTransferTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -175,8 +185,9 @@ const getPrivateTransferTripServices = catchAsync(
 // get all trip services PRIVATE_TRANSFER and isPopular
 const getPrivateTransferPopularTripServices = catchAsync(
   async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
     const result =
-      await TripServiceService.getPrivateTransferPopularTripServices();
+      await TripServiceService.getPrivateTransferPopularTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -191,7 +202,9 @@ const getPrivateTransferPopularTripServices = catchAsync(
 // get all trip services AIRPORT_TRANSFER
 const getAirportTransferTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getAirportTransferTripServices();
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getAirportTransferTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -205,8 +218,9 @@ const getAirportTransferTripServices = catchAsync(
 // get all trip services AIRPORT_TRANSFER and isPopular
 const getAirportTransferPopularTripServices = catchAsync(
   async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
     const result =
-      await TripServiceService.getAirportTransferPopularTripServices();
+      await TripServiceService.getAirportTransferPopularTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

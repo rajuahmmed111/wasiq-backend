@@ -174,13 +174,31 @@ const getByTheHourTripServices = async (
 };
 
 // get all trip services BY_THE_HOUR and isPopular
-const getByTheHourPopularTripServices = async (): Promise<TripService[]> => {
+const getByTheHourPopularTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.BY_THE_HOUR,
+    isPopular: true,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: {
-      serviceType: ServiceType.BY_THE_HOUR,
-      isPopular: true,
-      status: "ACTIVE",
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
     include: {
       user: {
         select: {
@@ -192,13 +210,42 @@ const getByTheHourPopularTripServices = async (): Promise<TripService[]> => {
     },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services DAY_TRIP
-const getDayTripTripServices = async (): Promise<TripService[]> => {
+const getDayTripTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({ serviceType: ServiceType.DAY_TRIP });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: { serviceType: ServiceType.DAY_TRIP },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
     include: {
       user: {
         select: {
@@ -210,17 +257,46 @@ const getDayTripTripServices = async (): Promise<TripService[]> => {
     },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services DAY_TRIP and isPopular
-const getDayTripPopularTripServices = async (): Promise<TripService[]> => {
+const getDayTripPopularTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.DAY_TRIP,
+    isPopular: true,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: {
-      serviceType: ServiceType.DAY_TRIP,
-      isPopular: true,
-      status: "ACTIVE",
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
     include: {
       user: {
         select: {
@@ -230,18 +306,44 @@ const getDayTripPopularTripServices = async (): Promise<TripService[]> => {
         },
       },
     },
-    orderBy: {
-      bookingCount: "desc",
-    },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services MULTI_DAY_TOUR
-const getMultiDayTourTripServices = async (): Promise<TripService[]> => {
+const getMultiDayTourTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({ serviceType: ServiceType.MULTI_DAY_TOUR });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: { serviceType: ServiceType.MULTI_DAY_TOUR },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
     include: {
       user: {
         select: {
@@ -253,17 +355,46 @@ const getMultiDayTourTripServices = async (): Promise<TripService[]> => {
     },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services MULTI_DAY_TOUR and isPopular
-const getMultiDayTourPopularTripServices = async (): Promise<TripService[]> => {
+const getMultiDayTourPopularTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.MULTI_DAY_TOUR,
+    isPopular: true,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: {
-      serviceType: ServiceType.MULTI_DAY_TOUR,
-      isPopular: true,
-      isService: "AVAILABLE",
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
     include: {
       user: {
         select: {
@@ -273,18 +404,44 @@ const getMultiDayTourPopularTripServices = async (): Promise<TripService[]> => {
         },
       },
     },
-    orderBy: {
-      bookingCount: "desc",
-    },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services PRIVATE_TRANSFER
-const getPrivateTransferTripServices = async (): Promise<TripService[]> => {
+const getPrivateTransferTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({ serviceType: ServiceType.PRIVATE_TRANSFER });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: { serviceType: ServiceType.PRIVATE_TRANSFER },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
     include: {
       user: {
         select: {
@@ -296,19 +453,46 @@ const getPrivateTransferTripServices = async (): Promise<TripService[]> => {
     },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services PRIVATE_TRANSFER and isPopular
-const getPrivateTransferPopularTripServices = async (): Promise<
-  TripService[]
-> => {
+const getPrivateTransferPopularTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.PRIVATE_TRANSFER,
+    isPopular: true,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: {
-      serviceType: ServiceType.PRIVATE_TRANSFER,
-      isPopular: true,
-      isService: "AVAILABLE",
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
     include: {
       user: {
         select: {
@@ -318,18 +502,44 @@ const getPrivateTransferPopularTripServices = async (): Promise<
         },
       },
     },
-    orderBy: {
-      bookingCount: "desc",
-    },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services AIRPORT_TRANSFER
-const getAirportTransferTripServices = async (): Promise<TripService[]> => {
+const getAirportTransferTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({ serviceType: ServiceType.AIRPORT_TRANSFER });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: { serviceType: ServiceType.AIRPORT_TRANSFER },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
     include: {
       user: {
         select: {
@@ -341,19 +551,46 @@ const getAirportTransferTripServices = async (): Promise<TripService[]> => {
     },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services AIRPORT_TRANSFER and isPopular
-const getAirportTransferPopularTripServices = async (): Promise<
-  TripService[]
-> => {
+const getAirportTransferPopularTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.AIRPORT_TRANSFER,
+    isPopular: true,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: {
-      serviceType: ServiceType.AIRPORT_TRANSFER,
-      isPopular: true,
-      isService: "AVAILABLE",
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
     include: {
       user: {
         select: {
@@ -363,12 +600,20 @@ const getAirportTransferPopularTripServices = async (): Promise<
         },
       },
     },
-    orderBy: {
-      bookingCount: "desc",
-    },
   });
 
-  return result;
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get single trip service
