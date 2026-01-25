@@ -86,14 +86,13 @@ const getSingleTripService = catchAsync(async (req: Request, res: Response) => {
 // update trip service
 const updateTripService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = req.user?.id;
   const updateData = req.body;
 
   const files = req.files as {
     [fieldname: string]: Express.Multer.File[];
   };
 
-  // Handle image uploads to Cloudinary for updates
+  // image uploads
   let imageUrls: string[] = [];
   if (files?.image && files.image.length > 0) {
     const uploadPromises = files.image.map((file) =>
@@ -107,7 +106,6 @@ const updateTripService = catchAsync(async (req: Request, res: Response) => {
       .map((result) => result.secure_url);
   }
 
-  // Add image URLs to updateData if new images were uploaded
   const finalUpdateData = {
     ...updateData,
     ...(imageUrls.length > 0 && { images: imageUrls }),
@@ -115,7 +113,6 @@ const updateTripService = catchAsync(async (req: Request, res: Response) => {
 
   const result = await TripServiceService.updateTripService(
     id,
-    userId,
     finalUpdateData,
   );
 

@@ -31,7 +31,7 @@ router.get("/:id", TripServiceController.getSingleTripService);
 // update trip service
 router.patch(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.AGENT),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   uploadFile.upload.fields([{ name: "image", maxCount: 40 }]),
   parseBodyData,
   validateRequest(TripServiceValidation.updateTripServiceValidationSchema),

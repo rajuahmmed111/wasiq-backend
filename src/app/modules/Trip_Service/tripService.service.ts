@@ -152,12 +152,11 @@ const getSingleTripService = async (id: string): Promise<TripService> => {
 // update trip service
 const updateTripService = async (
   id: string,
-  userId: string,
   payload: Partial<ITripService>,
 ): Promise<TripService> => {
   // check if trip service exists and belongs to user
   const existingTripService = await prisma.tripService.findFirst({
-    where: { id, userId },
+    where: { id },
   });
 
   if (!existingTripService) {
