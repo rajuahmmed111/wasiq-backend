@@ -5,6 +5,8 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { ITripService } from "./tripService.interface";
 import { uploadFile } from "../../../helpars/fileUploader";
+import { pick } from "../../../shared/pick";
+import { paginationFields } from "../../../constants/pagination";
 
 // create trip service
 const createTripService = catchAsync(async (req: Request, res: Response) => {
@@ -72,7 +74,8 @@ const getAllTripServices = catchAsync(async (req: Request, res: Response) => {
 // get all trip services BY_THE_HOUR
 const getByTheHourTripServices = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await TripServiceService.getByTheHourTripServices();
+    const options = pick(req.query, paginationFields);
+    const result = await TripServiceService.getByTheHourTripServices(options);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

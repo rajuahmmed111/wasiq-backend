@@ -3,8 +3,9 @@ import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
 import { ITripService, ITripServiceFilters } from "./tripService.interface";
-import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
+import { IPaginationOptions } from "../../../interfaces/paginations";
+import { IGenericResponse } from "../../../interfaces/common";
 
 // create trip service
 const createTripService = async (
@@ -115,22 +116,38 @@ const getAllTripServices = async (
     where: whereConditions,
   });
 
-  const meta = {
-    total,
-    page,
-    limit,
-  };
-
   return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
     data: result,
-    meta,
   };
 };
 
 // get all trip services BY_THE_HOUR
-const getByTheHourTripServices = async (): Promise<TripService[]> => {
+const getByTheHourTripServices = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({ serviceType: ServiceType.BY_THE_HOUR });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
   const result = await prisma.tripService.findMany({
-    where: { serviceType: ServiceType.BY_THE_HOUR },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
     include: {
       user: {
         select: {
@@ -141,7 +158,19 @@ const getByTheHourTripServices = async (): Promise<TripService[]> => {
       },
     },
   });
-  return result;
+
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get all trip services BY_THE_HOUR and isPopular
