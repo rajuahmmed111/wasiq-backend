@@ -22,6 +22,60 @@ router.post(
 // get all trip services
 router.get("/", TripServiceController.getAllTripServices);
 
+// get all trip services BY_THE_HOUR
+router.get("/by-the-hour", TripServiceController.getByTheHourTripServices);
+
+// get all trip services BY_THE_HOUR and isPopular
+router.get(
+  "/by-the-hour/popular",
+  TripServiceController.getByTheHourPopularTripServices,
+);
+
+// get all trip services DAY_TRIP
+router.get("/day-trip", TripServiceController.getDayTripTripServices);
+
+// get all trip services DAY_TRIP and isPopular
+router.get(
+  "/day-trip/popular",
+  TripServiceController.getDayTripPopularTripServices,
+);
+
+// get all trip services MULTI_DAY_TOUR
+router.get(
+  "/multi-day-tour",
+  TripServiceController.getMultiDayTourTripServices,
+);
+
+// get all trip services MULTI_DAY_TOUR and isPopular
+router.get(
+  "/multi-day-tour/popular",
+  TripServiceController.getMultiDayTourPopularTripServices,
+);
+
+// get all trip services PRIVATE_TRANSFER
+router.get(
+  "/private-transfer",
+  TripServiceController.getPrivateTransferTripServices,
+);
+
+// get all trip services PRIVATE_TRANSFER and isPopular
+router.get(
+  "/private-transfer/popular",
+  TripServiceController.getPrivateTransferPopularTripServices,
+);
+
+// get all trip services AIRPORT_TRANSFER
+router.get(
+  "/airport-transfer",
+  TripServiceController.getAirportTransferTripServices,
+);
+
+// get all trip services AIRPORT_TRANSFER and isPopular
+router.get(
+  "/airport-transfer/popular",
+  TripServiceController.getAirportTransferPopularTripServices,
+);
+
 // get popular trip services
 router.get("/popular", TripServiceController.getPopularTripServices);
 

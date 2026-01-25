@@ -69,6 +69,152 @@ const getAllTripServices = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all trip services BY_THE_HOUR
+const getByTheHourTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getByTheHourTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "BY_THE_HOUR Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services BY_THE_HOUR and isPopular
+const getByTheHourPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getByTheHourPopularTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "BY_THE_HOUR and isPopular Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services BY_THE_DAY
+const getDayTripTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getDayTripTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "BY_THE_DAY Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services BY_THE_DAY and isPopular
+const getDayTripPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getDayTripPopularTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "BY_THE_DAY and isPopular Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services MULTI_DAY_TOUR
+const getMultiDayTourTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getMultiDayTourTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "MULTI_DAY_TOUR Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services MULTI_DAY_TOUR and isPopular
+const getMultiDayTourPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result =
+      await TripServiceService.getMultiDayTourPopularTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "MULTI_DAY_TOUR and isPopular Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services PRIVATE_TRANSFER
+const getPrivateTransferTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getPrivateTransferTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "PRIVATE_TRANSFER Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services PRIVATE_TRANSFER and isPopular
+const getPrivateTransferPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result =
+      await TripServiceService.getPrivateTransferPopularTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "PRIVATE_TRANSFER and isPopular Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services AIRPORT_TRANSFER
+const getAirportTransferTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await TripServiceService.getAirportTransferTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "AIRPORT_TRANSFER Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+// get all trip services AIRPORT_TRANSFER and isPopular
+const getAirportTransferPopularTripServices = catchAsync(
+  async (req: Request, res: Response) => {
+    const result =
+      await TripServiceService.getAirportTransferPopularTripServices();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "AIRPORT_TRANSFER and isPopular Trip services retrieved successfully",
+      data: result,
+    });
+  },
+);
+
 // get single trip service
 const getSingleTripService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -156,6 +302,16 @@ const getPopularTripServices = catchAsync(
 export const TripServiceController = {
   createTripService,
   getAllTripServices,
+  getByTheHourTripServices,
+  getByTheHourPopularTripServices,
+  getDayTripTripServices,
+  getDayTripPopularTripServices,
+  getMultiDayTourTripServices,
+  getMultiDayTourPopularTripServices,
+  getPrivateTransferTripServices,
+  getPrivateTransferPopularTripServices,
+  getAirportTransferTripServices,
+  getAirportTransferPopularTripServices,
   getSingleTripService,
   updateTripService,
   deleteTripService,

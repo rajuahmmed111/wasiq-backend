@@ -1,4 +1,4 @@
-import { Prisma, TripService } from "@prisma/client";
+import { Prisma, ServiceType, TripService } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
@@ -127,6 +127,221 @@ const getAllTripServices = async (
   };
 };
 
+// get all trip services BY_THE_HOUR
+const getByTheHourTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: { serviceType: ServiceType.BY_THE_HOUR },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
+// get all trip services BY_THE_HOUR and isPopular
+const getByTheHourPopularTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: {
+      serviceType: ServiceType.BY_THE_HOUR,
+      isPopular: true,
+      status: "ACTIVE",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get all trip services DAY_TRIP
+const getDayTripTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: { serviceType: ServiceType.DAY_TRIP },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get all trip services DAY_TRIP and isPopular
+const getDayTripPopularTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: {
+      serviceType: ServiceType.DAY_TRIP,
+      isPopular: true,
+      status: "ACTIVE",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      bookingCount: "desc",
+    },
+  });
+
+  return result;
+};
+
+// get all trip services MULTI_DAY_TOUR
+const getMultiDayTourTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: { serviceType: ServiceType.MULTI_DAY_TOUR },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get all trip services MULTI_DAY_TOUR and isPopular
+const getMultiDayTourPopularTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: {
+      serviceType: ServiceType.MULTI_DAY_TOUR,
+      isPopular: true,
+      isService: "AVAILABLE",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      bookingCount: "desc",
+    },
+  });
+
+  return result;
+};
+
+// get all trip services PRIVATE_TRANSFER
+const getPrivateTransferTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: { serviceType: ServiceType.PRIVATE_TRANSFER },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get all trip services PRIVATE_TRANSFER and isPopular
+const getPrivateTransferPopularTripServices = async (): Promise<
+  TripService[]
+> => {
+  const result = await prisma.tripService.findMany({
+    where: {
+      serviceType: ServiceType.PRIVATE_TRANSFER,
+      isPopular: true,
+      isService: "AVAILABLE",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      bookingCount: "desc",
+    },
+  });
+
+  return result;
+};
+
+// get all trip services AIRPORT_TRANSFER
+const getAirportTransferTripServices = async (): Promise<TripService[]> => {
+  const result = await prisma.tripService.findMany({
+    where: { serviceType: ServiceType.AIRPORT_TRANSFER },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get all trip services AIRPORT_TRANSFER and isPopular
+const getAirportTransferPopularTripServices = async (): Promise<
+  TripService[]
+> => {
+  const result = await prisma.tripService.findMany({
+    where: {
+      serviceType: ServiceType.AIRPORT_TRANSFER,
+      isPopular: true,
+      isService: "AVAILABLE",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      bookingCount: "desc",
+    },
+  });
+
+  return result;
+};
+
 // get single trip service
 const getSingleTripService = async (id: string): Promise<TripService> => {
   const result = await prisma.tripService.findUnique({
@@ -245,6 +460,16 @@ const getPopularTripServices = async (): Promise<TripService[]> => {
 export const TripServiceService = {
   createTripService,
   getAllTripServices,
+  getByTheHourTripServices,
+  getByTheHourPopularTripServices,
+  getDayTripTripServices,
+  getDayTripPopularTripServices,
+  getMultiDayTourTripServices,
+  getMultiDayTourPopularTripServices,
+  getPrivateTransferTripServices,
+  getPrivateTransferPopularTripServices,
+  getAirportTransferTripServices,
+  getAirportTransferPopularTripServices,
   getSingleTripService,
   updateTripService,
   deleteTripService,
