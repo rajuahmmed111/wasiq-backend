@@ -290,9 +290,8 @@ const updateTripService = catchAsync(async (req: Request, res: Response) => {
 // delete trip service
 const deleteTripService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = req.user?.id;
 
-  const result = await TripServiceService.deleteTripService(id, userId);
+  const result = await TripServiceService.deleteTripService(id);
 
   sendResponse<ITripService>(res, {
     statusCode: httpStatus.OK,
@@ -301,20 +300,6 @@ const deleteTripService = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
-// get popular trip services
-const getPopularTripServices = catchAsync(
-  async (req: Request, res: Response) => {
-    const result = await TripServiceService.getPopularTripServices();
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Popular trip services retrieved successfully",
-      data: result,
-    });
-  },
-);
 
 export const TripServiceController = {
   createTripService,
@@ -332,5 +317,4 @@ export const TripServiceController = {
   getSingleTripService,
   updateTripService,
   deleteTripService,
-  getPopularTripServices,
 };

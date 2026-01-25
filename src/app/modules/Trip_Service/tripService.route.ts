@@ -23,10 +23,7 @@ router.post(
 router.get("/", TripServiceController.getAllTripServices);
 
 // get all trip services BY_THE_HOUR
-router.get(
-  "/by-the-hour",
-  TripServiceController.getByTheHourTripServices,
-);
+router.get("/by-the-hour", TripServiceController.getByTheHourTripServices);
 
 // get all trip services BY_THE_HOUR and isPopular
 router.get(
@@ -79,9 +76,6 @@ router.get(
   TripServiceController.getAirportTransferPopularTripServices,
 );
 
-// get popular trip services
-router.get("/popular", TripServiceController.getPopularTripServices);
-
 // get single trip service
 router.get("/:id", TripServiceController.getSingleTripService);
 
@@ -98,7 +92,7 @@ router.patch(
 // delete trip service
 router.delete(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.AGENT),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   TripServiceController.deleteTripService,
 );
 

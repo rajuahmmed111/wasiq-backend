@@ -673,13 +673,10 @@ const updateTripService = async (
 };
 
 // delete trip service
-const deleteTripService = async (
-  id: string,
-  userId: string,
-): Promise<TripService> => {
+const deleteTripService = async (id: string): Promise<TripService> => {
   // check if trip service exists and belongs to user
   const existingTripService = await prisma.tripService.findFirst({
-    where: { id, userId },
+    where: { id },
   });
 
   if (!existingTripService) {
@@ -705,32 +702,6 @@ const deleteTripService = async (
   return result;
 };
 
-// get popular trip services
-const getPopularTripServices = async (): Promise<TripService[]> => {
-  const result = await prisma.tripService.findMany({
-    where: {
-      isPopular: true,
-      isService: "AVAILABLE",
-      status: "ACTIVE",
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          fullName: true,
-          email: true,
-        },
-      },
-    },
-    orderBy: {
-      bookingCount: "desc",
-    },
-    take: 10, // limit to top 10 popular trips
-  });
-
-  return result;
-};
-
 export const TripServiceService = {
   createTripService,
   getAllTripServices,
@@ -747,5 +718,4 @@ export const TripServiceService = {
   getSingleTripService,
   updateTripService,
   deleteTripService,
-  getPopularTripServices,
 };
