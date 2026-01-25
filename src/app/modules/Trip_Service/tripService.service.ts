@@ -126,6 +126,8 @@ const getAllTripServices = async (
   };
 };
 
+// ----------------- by the hour -----------------
+
 // get all trip services BY_THE_HOUR
 const getByTheHourTripServices = async (
   options: IPaginationOptions,
@@ -223,6 +225,8 @@ const getByTheHourPopularTripServices = async (
     data: result,
   };
 };
+
+// ----------------- day trip -----------------
 
 // get all trip services DAY_TRIP
 const getDayTripTripServices = async (
@@ -322,6 +326,8 @@ const getDayTripPopularTripServices = async (
   };
 };
 
+// ----------------- multi day tour -----------------
+
 // get all trip services MULTI_DAY_TOUR
 const getMultiDayTourTripServices = async (
   options: IPaginationOptions,
@@ -420,6 +426,8 @@ const getMultiDayTourPopularTripServices = async (
   };
 };
 
+// ----------------- private transfer -----------------
+
 // get all trip services PRIVATE_TRANSFER
 const getPrivateTransferTripServices = async (
   options: IPaginationOptions,
@@ -517,6 +525,8 @@ const getPrivateTransferPopularTripServices = async (
     data: result,
   };
 };
+
+// ----------------- airport transfer -----------------
 
 // get all trip services AIRPORT_TRANSFER
 const getAirportTransferTripServices = async (

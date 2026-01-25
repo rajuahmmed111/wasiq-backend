@@ -22,6 +22,8 @@ router.post(
 // get all trip services
 router.get("/", TripServiceController.getAllTripServices);
 
+// ----------------- by the hour -----------------
+
 // get all trip services BY_THE_HOUR
 router.get("/by-the-hour", TripServiceController.getByTheHourTripServices);
 
@@ -31,6 +33,8 @@ router.get(
   TripServiceController.getByTheHourPopularTripServices,
 );
 
+// ----------------- day trip -----------------
+
 // get all trip services DAY_TRIP
 router.get("/day-trip", TripServiceController.getDayTripTripServices);
 
@@ -39,6 +43,8 @@ router.get(
   "/day-trip/popular",
   TripServiceController.getDayTripPopularTripServices,
 );
+
+// ----------------- multi day tour -----------------
 
 // get all trip services MULTI_DAY_TOUR
 router.get(
@@ -52,6 +58,8 @@ router.get(
   TripServiceController.getMultiDayTourPopularTripServices,
 );
 
+// ----------------- private transfer -----------------
+
 // get all trip services PRIVATE_TRANSFER
 router.get(
   "/private-transfer",
@@ -63,6 +71,8 @@ router.get(
   "/private-transfer/popular",
   TripServiceController.getPrivateTransferPopularTripServices,
 );
+
+// ----------------- airport transfer -----------------
 
 // get all trip services AIRPORT_TRANSFER
 router.get(

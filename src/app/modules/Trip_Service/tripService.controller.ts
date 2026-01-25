@@ -71,6 +71,8 @@ const getAllTripServices = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// ----------------- by the hour -----------------
+
 // get all trip services BY_THE_HOUR
 const getByTheHourTripServices = catchAsync(
   async (req: Request, res: Response) => {
@@ -102,6 +104,8 @@ const getByTheHourPopularTripServices = catchAsync(
   },
 );
 
+// ----------------- day trip -----------------
+
 // get all trip services BY_THE_DAY
 const getDayTripTripServices = catchAsync(
   async (req: Request, res: Response) => {
@@ -132,6 +136,8 @@ const getDayTripPopularTripServices = catchAsync(
     });
   },
 );
+
+// ----------------- multi day tour -----------------
 
 // get all trip services MULTI_DAY_TOUR
 const getMultiDayTourTripServices = catchAsync(
@@ -166,6 +172,8 @@ const getMultiDayTourPopularTripServices = catchAsync(
   },
 );
 
+// ----------------- private transfer -----------------
+
 // get all trip services PRIVATE_TRANSFER
 const getPrivateTransferTripServices = catchAsync(
   async (req: Request, res: Response) => {
@@ -198,6 +206,8 @@ const getPrivateTransferPopularTripServices = catchAsync(
     });
   },
 );
+
+// ----------------- airport transfer -----------------
 
 // get all trip services AIRPORT_TRANSFER
 const getAirportTransferTripServices = catchAsync(
