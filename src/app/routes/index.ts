@@ -5,7 +5,6 @@ import { userRoute } from "../modules/User/user.route";
 import { privacyPolicyRoute } from "../modules/Privacy_Policy/policy.route";
 import { settingRoute } from "../modules/Setting/setting.route";
 import { termsConditionRoute } from "../modules/Terms_Condition/terms.route";
-import { phoneRoute } from "../modules/Setting/PhoneNumberVerify/phone.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
 import { financeRoutes } from "../modules/Finances/finance.route";
 import { supportRoutes } from "../modules/Support/support.route";
@@ -79,10 +78,7 @@ const moduleRoutes = [
     path: "/settings",
     route: settingRoute,
   },
-  {
-    path: "/phone",
-    route: phoneRoute,
-  },
+
   {
     path: "/messages",
     route: messageRoutes,
