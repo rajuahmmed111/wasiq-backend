@@ -17,6 +17,16 @@ const createTripService = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const tripServiceData = req.body;
 
+  // check if images are provided
+  if (!files?.image || files.image.length === 0) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: "Images are required",
+      data: null,
+    });
+  }
+
   // handle image uploads
   let imageUrls: string[] = [];
   if (files?.image && files.image.length > 0) {
@@ -115,6 +125,16 @@ const createDayTripService = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const tripServiceData = req.body;
 
+  // check if images are provided
+  if (!files?.image || files.image.length === 0) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: "Images are required",
+      data: null,
+    });
+  }
+
   // handle image uploads
   let imageUrls: string[] = [];
   if (files?.image && files.image.length > 0) {
@@ -143,7 +163,7 @@ const createDayTripService = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Trip service created successfully",
+    message: "Day Trip service created successfully",
     data: result,
   });
 });
@@ -199,6 +219,61 @@ const getDayTripTripServicesByFromLocationGroup = catchAsync(
 );
 
 // ----------------- multi day tour -----------------
+
+// create multi day tour trip service
+const createMultiDayTourTripService = catchAsync(
+  async (req: Request, res: Response) => {
+    const files = req.files as {
+      [fieldname: string]: Express.Multer.File[];
+    };
+
+    const userId = req.user?.id;
+    const tripServiceData = req.body;
+
+    // check if images are provided
+    if (!files?.image || files.image.length === 0) {
+      return sendResponse(res, {
+        statusCode: httpStatus.BAD_REQUEST,
+        success: false,
+        message: "Images are required",
+        data: null,
+      });
+    }
+
+    // handle image uploads
+    let imageUrls: string[] = [];
+    if (files?.image && files.image.length > 0) {
+      const uploadPromises = files.image.map((file) =>
+        uploadFile.uploadToCloudinary(file),
+      );
+      const uploadResults = await Promise.all(uploadPromises);
+      imageUrls = uploadResults
+        .filter(
+          (result): result is NonNullable<typeof result> =>
+            result !== undefined,
+        )
+        .map((result) => result.secure_url);
+    }
+
+    // image with tripServiceData
+    const finalTripServiceData = {
+      ...tripServiceData,
+      images: imageUrls.length > 0 ? imageUrls : [],
+    };
+
+    const result = await TripServiceService.createMultiDayTourTripService(
+      userId,
+      finalTripServiceData,
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.CREATED,
+      success: true,
+      message: "Multi Day Tour Trip service created successfully",
+      data: result,
+    });
+  },
+);
 
 // get all trip services MULTI_DAY_TOUR
 const getMultiDayTourTripServices = catchAsync(
@@ -406,6 +481,7 @@ export const TripServiceController = {
   getDayTripTripServicesByFromLocationGroup,
 
   // tour
+  createMultiDayTourTripService,
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
 

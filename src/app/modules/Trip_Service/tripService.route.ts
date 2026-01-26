@@ -62,6 +62,16 @@ router.get(
 
 // ----------------- multi day tour -----------------
 
+// create multi day tour trip service
+router.post(
+  "/multi-day-tour",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadFile.upload.fields([{ name: "image", maxCount: 40 }]),
+  parseBodyData,
+  validateRequest(TripServiceValidation.createMultiDayTourTripServiceValidationSchema),
+  TripServiceController.createMultiDayTourTripService,
+);
+
 // get all trip services MULTI_DAY_TOUR
 router.get(
   "/multi-day-tour",

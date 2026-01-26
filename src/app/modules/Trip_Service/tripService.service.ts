@@ -245,6 +245,7 @@ const createDayTripService = async (
     data: {
       ...payload,
       userId: user.id,
+      serviceType: ServiceType.DAY_TRIP,
     },
     include: {
       user: {
@@ -425,6 +426,52 @@ const getDayTripTripServicesByFromLocationGroup = async (
 };
 
 // ----------------- multi day tour -----------------
+
+// create multi day tour trip service
+const createMultiDayTourTripService = async (
+  userId: string,
+  payload: ITripService,
+): Promise<any> => {
+  // check if user exists
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const result = await prisma.tripService.create({
+    data: {
+      ...payload,
+      userId: user.id,
+      serviceType: ServiceType.MULTI_DAY_TOUR,
+    },
+    select: {
+      id: true,
+      serviceType: true,
+      groupType: true,
+      images: true,
+      description: true,
+      routeType: true,
+      tourDays: true,
+      isPopular: true,
+      features: true,
+      isService: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
 
 // get all trip services MULTI_DAY_TOUR
 const getMultiDayTourTripServices = async (
@@ -891,6 +938,7 @@ export const TripServiceService = {
   getDayTripTripServicesByFromLocationGroup,
 
   // tour
+  createMultiDayTourTripService,
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
 
