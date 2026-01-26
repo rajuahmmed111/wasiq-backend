@@ -263,7 +263,7 @@ model TripService {
   groupType         String
   images            String[]
   description       String
-  serviceType       ServiceType // 🔥 MAIN DIFFERENCE
+  serviceType       ServiceType
   routeType         String?
   isPopular         Boolean            @default(false)
   bookingCount      Int                @default(0)
