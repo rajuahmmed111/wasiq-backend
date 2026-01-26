@@ -84,6 +84,12 @@ router.get(
   TripServiceController.getMultiDayTourPopularTripServices,
 );
 
+// get trip service MULTI_DAY_TOUR on the tourDays group
+router.get(
+  "/multi-day-tour/tour-days-group",
+  TripServiceController.getMultiDayTourTripServicesByTourDaysGroup,
+);
+
 // ----------------- private transfer -----------------
 
 // get all trip services PRIVATE_TRANSFER

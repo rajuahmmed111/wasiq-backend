@@ -308,6 +308,25 @@ const getMultiDayTourPopularTripServices = catchAsync(
   },
 );
 
+// get trip service MULTI_DAY_TOUR on the tourDays group
+const getMultiDayTourTripServicesByTourDaysGroup = catchAsync(
+  async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getMultiDayTourTripServicesByTourDaysGroup(
+        options,
+      );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "MULTI_DAY_TOUR Trip services retrieved successfully by tour days group",
+      data: result,
+    });
+  },
+);
+
 // ----------------- private transfer -----------------
 
 // get all trip services PRIVATE_TRANSFER
@@ -484,6 +503,7 @@ export const TripServiceController = {
   createMultiDayTourTripService,
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
+  getMultiDayTourTripServicesByTourDaysGroup,
 
   // transfer
   getPrivateTransferTripServices,

@@ -427,7 +427,7 @@ const getDayTripTripServicesByFromLocationGroup = async (
 
 // ----------------- multi day tour -----------------
 
-// create multi day tour trip service
+// create MULTI_DAY_TOUR trip service
 const createMultiDayTourTripService = async (
   userId: string,
   payload: ITripService,
@@ -568,6 +568,72 @@ const getMultiDayTourPopularTripServices = async (
       limit,
     },
     data: result,
+  };
+};
+
+// get trip service MULTI_DAY_TOUR on the tourDays group
+const getMultiDayTourTripServicesByTourDaysGroup = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.MULTI_DAY_TOUR,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
+  const trips = await prisma.tripService.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  // group by tourDays
+  const groupedData = trips.reduce((acc: any[], trip) => {
+    const existingGroup = acc.find((item) => item.tourDays === trip.tourDays);
+
+    if (existingGroup) {
+      existingGroup.trips.push(trip);
+    } else {
+      acc.push({
+        tourDays: trip.tourDays,
+        trips: [trip],
+      });
+    }
+
+    return acc;
+  }, []);
+
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: groupedData,
   };
 };
 
@@ -941,6 +1007,7 @@ export const TripServiceService = {
   createMultiDayTourTripService,
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
+  getMultiDayTourTripServicesByTourDaysGroup,
 
   // transfer
   getPrivateTransferTripServices,
