@@ -7,44 +7,37 @@ import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
 import { searchableFields } from "./support.constant";
 
-// create support
+// create multi day tour request
 const createSupport = async (userId: string, data: any) => {
-  const { subject, description, supportType } = data;
-  if (!subject || !description || !supportType) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "fields are required");
-  }
+  const { fullName, email, contactNumber, subject, description, supportType } =
+    data;
 
-  // find user
-  const findUser = await prisma.user.findUnique({ where: { id: userId } });
-  if (!findUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
   const support = await prisma.support.create({
     data: {
-      userId,
-      ...data,
+      fullName,
+      email,
+      contactNumber,
+      subject,
+      description,
     },
   });
 
   // create notification
   await prisma.notifications.create({
     data: {
-      title: "New Support Ticket Created",
-      body: `A new support ticket has been created by ${findUser.fullName}`,
-      message: `Support Subject: ${subject}`,
-      serviceTypes: "SUPPORT",
-      partnerId: userId,
-      supportId: support.id,
+      title: "Multi Day Tour Request",
+      body: `A new multi day tour request has been received from ${support.fullName}`,
+      message: `Subject: ${support.subject}`,
     },
   });
 
   return support;
 };
 
-// get all support
+// get all multi day tour requests
 const getAllSupport = async (
   params: IFilterRequest,
-  options: IPaginationOptions
+  options: IPaginationOptions,
 ) => {
   const { limit, page, skip } = paginationHelpers.calculatedPagination(options);
 
@@ -112,19 +105,7 @@ const getAllSupport = async (
   };
 };
 
-// get my support
-const getMySupport = async (userId: string) => {
-  // find user
-  const findUser = await prisma.user.findUnique({ where: { id: userId } });
-  if (!findUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  const result = await prisma.support.findMany({ where: { userId } });
-  return result;
-};
-
-// get support by id
+// get multi day tour request by id
 const getSupportById = async (id: string) => {
   const result = await prisma.support.findUnique({ where: { id } });
   if (!result) {
@@ -134,60 +115,7 @@ const getSupportById = async (id: string) => {
   return result;
 };
 
-// update my support
-const updateMySupport = async (
-  userId: string,
-  supportId: string,
-  data: any
-) => {
-  // find user
-  const findUser = await prisma.user.findUnique({
-    where: { id: userId, status: UserStatus.ACTIVE },
-  });
-  if (!findUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  // find support
-  const findSupport = await prisma.support.findUnique({
-    where: { id: supportId, userId },
-  });
-  if (!findSupport) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Support not found");
-  }
-
-  const result = await prisma.support.update({
-    where: { id: supportId },
-    data,
-  });
-  return result;
-};
-
-// delete my support
-const deleteMySupport = async (userId: string, supportId: string) => {
-  // find user
-  const findUser = await prisma.user.findUnique({
-    where: { id: userId, status: UserStatus.ACTIVE },
-  });
-  if (!findUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  // find support
-  const findSupport = await prisma.support.findUnique({
-    where: { id: supportId, userId },
-  });
-  if (!findSupport) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Support not found");
-  }
-
-  const result = await prisma.support.delete({
-    where: { id: findSupport.id },
-  });
-  return result;
-};
-
-// update support status
+// update multi day tour request status
 const updateSupportStatus = async (supportId: string) => {
   const result = await prisma.support.update({
     where: { id: supportId },
@@ -199,9 +127,6 @@ const updateSupportStatus = async (supportId: string) => {
 export const SupportService = {
   createSupport,
   getAllSupport,
-  getMySupport,
   getSupportById,
-  updateMySupport,
-  deleteMySupport,
   updateSupportStatus,
 };

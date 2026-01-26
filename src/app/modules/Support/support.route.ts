@@ -5,53 +5,32 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-// get all support
+// get all multi day tour requests
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  SupportController.getAllSupport
+  SupportController.getAllSupport,
 );
 
-// create support
+// create multi day tour request
 router.post(
   "/",
   auth(UserRole.USER, UserRole.AGENT),
-  SupportController.createSupport
+  SupportController.createSupport,
 );
 
-// get my support
-router.get(
-  "/my-support",
-  auth(UserRole.USER, UserRole.AGENT),
-  SupportController.getMySupport
-);
-
-// get support by id
+// get multi day tour request by id
 router.get(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER, UserRole.AGENT),
-  SupportController.getSupportById
+  SupportController.getSupportById,
 );
 
-// update my support
-router.patch(
-  "/update-my-support/:supportId",
-  auth(UserRole.USER, UserRole.AGENT),
-  SupportController.updateMySupport
-);
-
-// delete my support
-router.delete(
-  "/delete-my-support/:supportId",
-  auth(UserRole.USER, UserRole.AGENT),
-  SupportController.deleteMySupport
-);
-
-// update support status
+// update multi day tour request status
 router.patch(
   "/update-support-status/:supportId",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  SupportController.updateSupportStatus
+  SupportController.updateSupportStatus,
 );
 
 export const supportRoutes = router;

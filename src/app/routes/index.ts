@@ -96,7 +96,7 @@ const moduleRoutes = [
     route: financeRoutes,
   },
   {
-    path: "/supports",
+    path: "/contact",
     route: supportRoutes,
   },
 ];
