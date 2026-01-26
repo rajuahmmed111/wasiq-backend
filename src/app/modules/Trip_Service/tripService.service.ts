@@ -596,7 +596,22 @@ const getMultiDayTourTripServicesByTourDaysGroup = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : { bookingCount: "desc" },
-    include: {
+    select: {
+      id: true,
+      serviceType: true,
+      groupType: true,
+      images: true,
+      description: true,
+      routeType: true,
+      tourDays: true,
+      isPopular: true,
+      features: true,
+      isService: true,
+      status: true,
+      ratings: true,
+      reviewCount: true,
+      createdAt: true,
+      updatedAt: true,
       user: {
         select: {
           id: true,
