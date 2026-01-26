@@ -131,9 +131,6 @@ model User {
   receiver      Channel[]       @relation("ChannelPerson2")
   messages      Message[]       @relation("sentMessages")
   support       Support[]
-  // dayTrips         DayTrip[]
-  // popularDayTrips  MultiDayTour[]
-  // privateTransfers PrivateTransfer[]
   tripServices  TripService[]
 
   @@map("users")
@@ -151,102 +148,6 @@ model Admin {
 
   @@map("admins")
 }
-
-// model DayTrip {
-//   id                String             @id @default(auto()) @map("_id") @db.ObjectId
-//   from              String
-//   fromLat           Float?
-//   fromLng           Float?
-//   to                String
-//   toLat             Float?
-//   toLng             Float?
-//   price             Float
-//   travelTimeMinutes Int?
-//   distanceKm        Float?
-//   groupType         String
-//   image             String[]
-//   description       String
-//   isPopular         Boolean            @default(false)
-//   bookingCount      Int?               @default(0) // 1.2k+ times this month
-//   features          Json? // Free cancellation, 24/7 support, professional drivers
-//   routeType         String?            @default("city_to_city") // airport_transfer, city_to_city, etc.
-//   isService         EveryServiceStatus @default(AVAILABLE)
-//   status            ServiceStatus      @default(ACTIVE)
-//   ratings           Float?             @default(0)
-//   reviewCount       Int?               @default(0)
-//   createdAt         DateTime           @default(now())
-//   updatedAt         DateTime           @updatedAt
-
-//   // relationships
-//   user   User   @relation(fields: [userId], references: [id])
-//   userId String @db.ObjectId
-
-//   @@map("day_trips")
-// }
-
-// model MultiDayTour {
-//   id                String             @id @default(auto()) @map("_id") @db.ObjectId
-//   from              String
-//   fromLat           Float?
-//   fromLng           Float?
-//   to                String
-//   toLat             Float?
-//   toLng             Float?
-//   price             Float
-//   travelTimeMinutes Int?
-//   distanceKm        Float?
-//   groupType         String
-//   image             String[]
-//   description       String
-//   isPopular         Boolean            @default(false)
-//   bookingCount      Int?               @default(0) // 1.2k+ times this month
-//   features          Json? // Free cancellation, 24/7 support, professional drivers
-//   routeType         String?            @default("multi_day_tour") // airport_transfer, city_to_city, etc.
-//   isService         EveryServiceStatus @default(AVAILABLE)
-//   status            ServiceStatus      @default(ACTIVE)
-//   ratings           Float?             @default(0)
-//   reviewCount       Int?               @default(0)
-//   createdAt         DateTime           @default(now())
-//   updatedAt         DateTime           @updatedAt
-
-//   // relationships
-//   user   User   @relation(fields: [userId], references: [id])
-//   userId String @db.ObjectId
-
-//   @@map("multi_day_tours")
-// }
-
-// model PrivateTransfer {
-//   id                String             @id @default(auto()) @map("_id") @db.ObjectId
-//   from              String
-//   fromLat           Float?
-//   fromLng           Float?
-//   to                String
-//   toLat             Float?
-//   toLng             Float?
-//   price             Float
-//   travelTimeMinutes Int?
-//   distanceKm        Float?
-//   groupType         String
-//   image             String[]
-//   description       String
-//   isPopular         Boolean            @default(false)
-//   bookingCount      Int?               @default(0) // 1.2k+ times this month
-//   features          Json? // Free cancellation, 24/7 support, professional drivers
-//   routeType         String?            @default("airport_transfer") // airport_transfer, city_to_city, etc.
-//   isService         EveryServiceStatus @default(AVAILABLE)
-//   status            ServiceStatus      @default(ACTIVE)
-//   ratings           Float?             @default(0)
-//   reviewCount       Int?               @default(0)
-//   createdAt         DateTime           @default(now())
-//   updatedAt         DateTime           @updatedAt
-
-//   // relationships
-//   user   User   @relation(fields: [userId], references: [id])
-//   userId String @db.ObjectId
-
-//   @@map("private_transfers")
-// }
 
 model TripService {
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -305,13 +206,16 @@ model Stoppage {
 }
 
 model Vehicle {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  passengerCapacity Int
-  bagsCapacity      Int
-  license           String
-  image             String[]
-  driverName        String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String // Sedan, SUV, Minivan
+  seatCount   Int
+  luggage     Int
+  basePrice   Float
+  pricePerKm  Float?
+  image       String[]
+  plateNumber String?
+  isActive    Boolean  @default(true)
+  driverName  String
 }
 
 model Review {
