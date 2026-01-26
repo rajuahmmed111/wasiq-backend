@@ -251,13 +251,13 @@ model Admin {
 model TripService {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  from              String
+  from              String?
   fromLat           Float?
   fromLng           Float?
-  to                String
+  to                String?
   toLat             Float?
   toLng             Float?
-  price             Float
+  price             Float?
   travelTimeMinutes Int?
   distanceKm        Float?
   groupType         String
@@ -265,6 +265,7 @@ model TripService {
   description       String
   serviceType       ServiceType
   routeType         String?
+  tourDays          Int?
   isPopular         Boolean            @default(false)
   bookingCount      Int                @default(0)
   features          Json?

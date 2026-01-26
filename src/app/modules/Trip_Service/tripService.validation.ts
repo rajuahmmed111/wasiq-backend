@@ -3,7 +3,7 @@ import { z } from "zod";
 // create trip service validation schema
 const createTripServiceValidationSchema = z.object({
   body: z.object({
-    from: z.string().min(1, "From location is required"),
+    from: z.string().min(1, "From location is required").optional(),
     fromLat: z
       .string()
       .optional()
@@ -12,7 +12,7 @@ const createTripServiceValidationSchema = z.object({
       .string()
       .optional()
       .transform((val) => (val ? parseFloat(val) : undefined)),
-    to: z.string().min(1, "To location is required"),
+    to: z.string().min(1, "To location is required").optional(),
     toLat: z
       .string()
       .optional()
@@ -20,8 +20,9 @@ const createTripServiceValidationSchema = z.object({
     toLng: z.string().transform((val) => (val ? parseFloat(val) : undefined)),
     price: z
       .string()
-      .transform((val) => parseFloat(val))
-      .refine((val) => val > 0, "Price must be a positive number"),
+      .optional()
+      .transform((val) => (val ? parseFloat(val) : undefined))
+      .refine((val) => !val || val > 0, "Price must be a positive number"),
     travelTimeMinutes: z
       .string()
       .optional()
@@ -42,6 +43,7 @@ const createTripServiceValidationSchema = z.object({
       .min(10, "Description must be at least 10 characters"),
     serviceType: z
       .enum([
+        "BY_THE_HOUR",
         "DAY_TRIP",
         "MULTI_DAY_TOUR",
         "PRIVATE_TRANSFER",
@@ -49,6 +51,11 @@ const createTripServiceValidationSchema = z.object({
       ])
       .default("DAY_TRIP"),
     routeType: z.string().optional().default("city_to_city"),
+    tourDays: z
+      .string()
+      .optional()
+      .transform((val) => (val ? parseInt(val) : undefined))
+      .refine((val) => !val || val > 0, "Tour days must be a positive integer"),
     isPopular: z
       .string()
       .optional()
@@ -125,9 +132,20 @@ const updateTripServiceValidationSchema = z.object({
       .min(10, "Description must be at least 10 characters")
       .optional(),
     serviceType: z
-      .enum(["DAY_TRIP", "MULTI_DAY_TOUR", "PRIVATE_TRANSFER"])
+      .enum([
+        "BY_THE_HOUR",
+        "DAY_TRIP",
+        "MULTI_DAY_TOUR",
+        "PRIVATE_TRANSFER",
+        "AIRPORT_TRANSFER",
+      ])
       .optional(),
     routeType: z.string().optional(),
+    tourDays: z
+      .string()
+      .optional()
+      .transform((val) => (val ? parseInt(val) : undefined))
+      .refine((val) => !val || val > 0, "Tour days must be a positive integer"),
     isPopular: z
       .string()
       .optional()
