@@ -137,6 +137,25 @@ const getDayTripPopularTripServices = catchAsync(
   },
 );
 
+// get trip service DAY_TRIP on the from location group
+const getDayTripTripServicesByFromLocationGroup = catchAsync(
+  async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getDayTripTripServicesByFromLocationGroup(
+        options,
+      );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "DAY_TRIP Trip services retrieved successfully by from location group",
+      data: result,
+    });
+  },
+);
+
 // ----------------- multi day tour -----------------
 
 // get all trip services MULTI_DAY_TOUR
@@ -314,16 +333,28 @@ const deleteTripService = catchAsync(async (req: Request, res: Response) => {
 export const TripServiceController = {
   createTripService,
   getAllTripServices,
+
+  // by the hour
   getByTheHourTripServices,
   getByTheHourPopularTripServices,
+
+  // the day trip
   getDayTripTripServices,
   getDayTripPopularTripServices,
+  getDayTripTripServicesByFromLocationGroup,
+
+  // tour
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
+
+  // transfer
   getPrivateTransferTripServices,
   getPrivateTransferPopularTripServices,
+
+  // airport transfer
   getAirportTransferTripServices,
   getAirportTransferPopularTripServices,
+
   getSingleTripService,
   updateTripService,
   deleteTripService,

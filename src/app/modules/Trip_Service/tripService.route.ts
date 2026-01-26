@@ -33,6 +33,8 @@ router.get(
   TripServiceController.getByTheHourPopularTripServices,
 );
 
+
+
 // ----------------- day trip -----------------
 
 // get all trip services DAY_TRIP
@@ -42,6 +44,12 @@ router.get("/day-trip", TripServiceController.getDayTripTripServices);
 router.get(
   "/day-trip/popular",
   TripServiceController.getDayTripPopularTripServices,
+);
+
+// get trip service DAY_TRIP on the from location group
+router.get(
+  "/day-trip/from-location-group",
+  TripServiceController.getDayTripTripServicesByFromLocationGroup,
 );
 
 // ----------------- multi day tour -----------------

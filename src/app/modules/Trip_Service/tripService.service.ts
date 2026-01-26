@@ -326,6 +326,73 @@ const getDayTripPopularTripServices = async (
   };
 };
 
+// get trip service DAY_TRIP on the from location group
+const getDayTripTripServicesByFromLocationGroup = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.DAY_TRIP,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
+const trips = await prisma.tripService.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  // group by "from"
+  const groupedData = trips.reduce((acc: any[], trip) => {
+    const existingGroup = acc.find(item => item.from === trip.from);
+
+    if (existingGroup) {
+      existingGroup.trips.push(trip);
+    } else {
+      acc.push({
+        from: trip.from,
+        trips: [trip],
+      });
+    }
+
+    return acc;
+  }, []);
+
+
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: groupedData,
+  };
+};
+
 // ----------------- multi day tour -----------------
 
 // get all trip services MULTI_DAY_TOUR
@@ -715,16 +782,28 @@ const deleteTripService = async (id: string): Promise<TripService> => {
 export const TripServiceService = {
   createTripService,
   getAllTripServices,
+
+  // by the hour
   getByTheHourTripServices,
   getByTheHourPopularTripServices,
+
+  // the day trip
   getDayTripTripServices,
   getDayTripPopularTripServices,
+  getDayTripTripServicesByFromLocationGroup,
+
+  // tour
   getMultiDayTourTripServices,
   getMultiDayTourPopularTripServices,
+
+  // transfer
   getPrivateTransferTripServices,
   getPrivateTransferPopularTripServices,
+
+  // airport transfer
   getAirportTransferTripServices,
   getAirportTransferPopularTripServices,
+
   getSingleTripService,
   updateTripService,
   deleteTripService,
