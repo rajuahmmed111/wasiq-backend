@@ -19,6 +19,7 @@ import { messageRoutes } from "../modules/Message/message.route";
 import { investorRelationsRoutes } from "../modules/Investor_Relations/investor.route";
 import { notificationsRoute } from "../modules/Notification/notification.route";
 import { tripServiceRoutes } from "../modules/Trip_Service/tripService.route";
+import { vehicleRoutes } from "../modules/Vehicle/vehicle.route";
 
 const router = express.Router();
 
@@ -35,6 +36,11 @@ const moduleRoutes = [
   {
     path: "/trip-services",
     route: tripServiceRoutes,
+  },
+
+  {
+    path: "/vehicles",
+    route: vehicleRoutes,
   },
 
   {

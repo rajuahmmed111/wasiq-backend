@@ -42,4 +42,4 @@ router.delete(
   VehicleController.deleteVehicle,
 );
 
-export const VehicleRoutes = router;
+export const vehicleRoutes = router;
