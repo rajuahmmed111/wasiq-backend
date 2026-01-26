@@ -9,14 +9,10 @@ import { phoneRoute } from "../modules/Setting/PhoneNumberVerify/phone.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
 import { financeRoutes } from "../modules/Finances/finance.route";
 import { supportRoutes } from "../modules/Support/support.route";
-import { humanRightRoute } from "../modules/Human_Rights/humanRight.route";
 import { refundPolicyRoute } from "../modules/Refund_Policy/refund_policy.route";
-import { newsRoomRoute } from "../modules/NewsRoom/news_room.route";
-import { advertisingRoutes } from "../modules/Advertise/advertising.route";
 import { cancelReservationRoute } from "../modules/Cancel_Reservation/cancel_reservation.route";
 import { faqRoutes } from "../modules/Faq/faq.routre";
 import { messageRoutes } from "../modules/Message/message.route";
-import { investorRelationsRoutes } from "../modules/Investor_Relations/investor.route";
 import { notificationsRoute } from "../modules/Notification/notification.route";
 import { tripServiceRoutes } from "../modules/Trip_Service/tripService.route";
 import { vehicleRoutes } from "../modules/Vehicle/vehicle.route";
@@ -51,14 +47,7 @@ const moduleRoutes = [
     path: "/faqs",
     route: faqRoutes,
   },
-  {
-    path: "/news-rooms",
-    route: newsRoomRoute,
-  },
-  {
-    path: "/human-rights",
-    route: humanRightRoute,
-  },
+
   {
     path: "/cancel-reservations",
     route: cancelReservationRoute,
@@ -75,14 +64,7 @@ const moduleRoutes = [
     path: "/policy",
     route: privacyPolicyRoute,
   },
-  {
-    path: "/investor-relations",
-    route: investorRelationsRoutes,
-  },
-  {
-    path: "/advertises",
-    route: advertisingRoutes,
-  },
+
   // {
   //   path: "/rewards",
   //   route: rewardsRoute,
