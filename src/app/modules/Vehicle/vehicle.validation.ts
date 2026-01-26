@@ -2,27 +2,112 @@ import { z } from "zod";
 
 const createVehicleValidation = z.object({
   name: z.string().min(1, "Vehicle name is required"),
-  seatCount: z.number().min(1, "Seat count must be at least 1"),
-  luggage: z.number().min(0, "Luggage capacity must be non-negative"),
-  basePrice: z.number().min(0, "Base price must be non-negative"),
-  pricePerKm: z.number().min(0, "Price per km must be non-negative").optional(),
-  image: z.array(z.string()).min(1, "At least one image is required"),
-  plateNumber: z.string().optional(),
-  isActive: z.boolean().default(true),
+  seatCount: z.string().transform((val) => {
+    const parsed = parseInt(val);
+    if (isNaN(parsed) || parsed < 1) {
+      throw new Error("Seat count must be a valid number greater than 0");
+    }
+    return parsed;
+  }),
+  luggage: z.string().transform((val) => {
+    const parsed = parseInt(val);
+    if (isNaN(parsed) || parsed < 0) {
+      throw new Error(
+        "Luggage capacity must be a valid number greater than or equal to 0",
+      );
+    }
+    return parsed;
+  }),
+  basePrice: z.string().transform((val) => {
+    const parsed = parseFloat(val);
+    if (isNaN(parsed) || parsed < 0) {
+      throw new Error(
+        "Base price must be a valid number greater than or equal to 0",
+      );
+    }
+    return parsed;
+  }),
+  pricePerKm: z
+    .string()
+    .transform((val) => {
+      if (val === "" || val === undefined) return undefined;
+      const parsed = parseFloat(val);
+      if (isNaN(parsed) || parsed < 0) {
+        throw new Error(
+          "Price per km must be a valid number greater than or equal to 0",
+        );
+      }
+      return parsed;
+    })
+    .optional(),
+  plateNumber: z.string().min(1, "Plate number is required"),
+  isActive: z.string().transform((val) => {
+    if (val !== "true" && val !== "false") {
+      throw new Error("Active status must be 'true' or 'false'");
+    }
+    return val === "true";
+  }),
 });
 
 const updateVehicleValidation = z.object({
   name: z.string().min(1, "Vehicle name is required").optional(),
-  seatCount: z.number().min(1, "Seat count must be at least 1").optional(),
-  luggage: z
-    .number()
-    .min(0, "Luggage capacity must be non-negative")
+  seatCount: z
+    .string()
+    .transform((val) => {
+      const parsed = parseInt(val);
+      if (isNaN(parsed) || parsed < 1) {
+        throw new Error("Seat count must be a valid number greater than 0");
+      }
+      return parsed;
+    })
     .optional(),
-  basePrice: z.number().min(0, "Base price must be non-negative").optional(),
-  pricePerKm: z.number().min(0, "Price per km must be non-negative").optional(),
-  image: z.array(z.string()).optional(),
+  luggage: z
+    .string()
+    .transform((val) => {
+      const parsed = parseInt(val);
+      if (isNaN(parsed) || parsed < 0) {
+        throw new Error(
+          "Luggage capacity must be a valid number greater than or equal to 0",
+        );
+      }
+      return parsed;
+    })
+    .optional(),
+  basePrice: z
+    .string()
+    .transform((val) => {
+      const parsed = parseFloat(val);
+      if (isNaN(parsed) || parsed < 0) {
+        throw new Error(
+          "Base price must be a valid number greater than or equal to 0",
+        );
+      }
+      return parsed;
+    })
+    .optional(),
+  pricePerKm: z
+    .string()
+    .transform((val) => {
+      if (val === "" || val === undefined) return undefined;
+      const parsed = parseFloat(val);
+      if (isNaN(parsed) || parsed < 0) {
+        throw new Error(
+          "Price per km must be a valid number greater than or equal to 0",
+        );
+      }
+      return parsed;
+    })
+    .optional(),
   plateNumber: z.string().optional(),
-  isActive: z.boolean().optional(),
+  isActive: z
+    .string()
+    .transform((val) => {
+      if (val !== "true" && val !== "false") {
+        throw new Error("Active status must be 'true' or 'false'");
+      }
+      return val === "true";
+    })
+    .optional(),
 });
 
 export const VehicleValidation = {
