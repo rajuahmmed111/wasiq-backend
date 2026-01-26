@@ -12,7 +12,7 @@ const router = Router();
 // create vehicle (admin only)
 router.post(
   "/",
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   uploadFile.upload.fields([{ name: "image", maxCount: 10 }]),
   parseBodyData,
   validateRequest(VehicleValidation.createVehicleValidation),
@@ -28,7 +28,7 @@ router.get("/:id", VehicleController.getSingleVehicle);
 // update vehicle (admin only)
 router.patch(
   "/:id",
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   uploadFile.upload.fields([{ name: "image", maxCount: 10 }]),
   parseBodyData,
   validateRequest(VehicleValidation.updateVehicleValidation),
@@ -36,6 +36,10 @@ router.patch(
 );
 
 // delete vehicle (admin only)
-router.delete("/:id", auth(UserRole.ADMIN), VehicleController.deleteVehicle);
+router.delete(
+  "/:id",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  VehicleController.deleteVehicle,
+);
 
 export const VehicleRoutes = router;
