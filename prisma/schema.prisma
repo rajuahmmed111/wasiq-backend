@@ -207,7 +207,7 @@ model Stoppage {
 
 model Vehicle {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String // Sedan, SUV, Minivan
+  name        String // Sedan, Compact MPV, Van, Luxury Sedan
   seatCount   Int
   luggage     Int
   basePrice   Float
@@ -215,7 +215,7 @@ model Vehicle {
   image       String[]
   plateNumber String?
   isActive    Boolean  @default(true)
-  driverName  String
+  // driverName  String
 }
 
 model Review {
