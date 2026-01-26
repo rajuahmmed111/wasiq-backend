@@ -107,6 +107,10 @@ const getSingleBlog = async (id: string): Promise<Blog | null> => {
     },
   });
 
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Blog not found");
+  }
+
   return result;
 };
 
