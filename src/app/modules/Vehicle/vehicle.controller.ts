@@ -3,16 +3,49 @@ import catchAsync from "../../../shared/catchAsync";
 import { VehicleService } from "./vehicle.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
-import { IVehicleFilters } from "./vehicle.interface";
 import { pick } from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
-import { VehicleValidation } from "./vehicle.validation";
+import { uploadFile } from "../../../helpars/fileUploader";
 
 // create vehicle
 const createVehicle = catchAsync(async (req: Request, res: Response) => {
+  const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
+
   const vehicleData = req.body;
 
-  const result = await VehicleService.createVehicle(vehicleData);
+  // handle image uploads
+  let imageUrls: string[] = [];
+  if (files?.image && files.image.length > 0) {
+    const uploadPromises = files.image.map((file) =>
+      uploadFile.uploadToCloudinary(file),
+    );
+    const uploadResults = await Promise.all(uploadPromises);
+    imageUrls = uploadResults
+      .filter(
+        (result): result is NonNullable<typeof result> => result !== undefined,
+      )
+      .map((result) => result.secure_url);
+  }
+
+  // check if images are provided
+  if (imageUrls.length === 0) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: "Images are required",
+      data: null,
+    });
+  }
+
+  // combine vehicle data with image URLs
+  const finalVehicleData = {
+    ...vehicleData,
+    image: imageUrls,
+  };
+
+  const result = await VehicleService.createVehicle(finalVehicleData);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -61,9 +94,33 @@ const getSingleVehicle = catchAsync(async (req: Request, res: Response) => {
 // update vehicle
 const updateVehicle = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
+  const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
+
   const vehicleData = req.body;
 
-  const result = await VehicleService.updateVehicle(id, vehicleData);
+  // handle image uploads
+  let imageUrls: string[] = [];
+  if (files?.image && files.image.length > 0) {
+    const uploadPromises = files.image.map((file) =>
+      uploadFile.uploadToCloudinary(file),
+    );
+    const uploadResults = await Promise.all(uploadPromises);
+    imageUrls = uploadResults
+      .filter(
+        (result): result is NonNullable<typeof result> => result !== undefined,
+      )
+      .map((result) => result.secure_url);
+  }
+
+  // combine vehicle data with image
+  const finalVehicleData = {
+    ...vehicleData,
+    ...(imageUrls.length > 0 && { image: imageUrls }),
+  };
+
+  const result = await VehicleService.updateVehicle(id, finalVehicleData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -112,7 +112,7 @@ const newsImage = upload.array("image", 40);
 const advertiseVideo = upload.single("advertiseVideo");
 const invertorRelationImage = upload.single("invertorRelationImage");
 
-// dayTripImage
+// dayTripImage and vehicle image
 const image = upload.array("image", 40);
 
 // Cloudinary configuration
@@ -171,6 +171,6 @@ export const uploadFile = {
   invertorRelationImage,
   uploadToCloudinary,
 
-  // dayTripImage
+  // dayTripImage and vehicle image
   image,
 };
