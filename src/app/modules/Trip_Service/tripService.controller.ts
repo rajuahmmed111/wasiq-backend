@@ -106,6 +106,48 @@ const getByTheHourPopularTripServices = catchAsync(
 
 // ----------------- day trip -----------------
 
+// create day trip service
+const createDayTripService = catchAsync(async (req: Request, res: Response) => {
+  const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
+
+  const userId = req.user?.id;
+  const tripServiceData = req.body;
+
+  // handle image uploads
+  let imageUrls: string[] = [];
+  if (files?.image && files.image.length > 0) {
+    const uploadPromises = files.image.map((file) =>
+      uploadFile.uploadToCloudinary(file),
+    );
+    const uploadResults = await Promise.all(uploadPromises);
+    imageUrls = uploadResults
+      .filter(
+        (result): result is NonNullable<typeof result> => result !== undefined,
+      )
+      .map((result) => result.secure_url);
+  }
+
+  // image with tripServiceData
+  const finalTripServiceData = {
+    ...tripServiceData,
+    images: imageUrls.length > 0 ? imageUrls : [],
+  };
+
+  const result = await TripServiceService.createDayTripService(
+    userId,
+    finalTripServiceData,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Trip service created successfully",
+    data: result,
+  });
+});
+
 // get all trip services BY_THE_DAY
 const getDayTripTripServices = catchAsync(
   async (req: Request, res: Response) => {
@@ -358,6 +400,7 @@ export const TripServiceController = {
   getByTheHourPopularTripServices,
 
   // the day trip
+  createDayTripService,
   getDayTripTripServices,
   getDayTripPopularTripServices,
   getDayTripTripServicesByFromLocationGroup,

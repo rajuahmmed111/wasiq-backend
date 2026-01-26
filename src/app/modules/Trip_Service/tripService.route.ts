@@ -35,6 +35,16 @@ router.get(
 
 // ----------------- day trip -----------------
 
+// create day trip service
+router.post(
+  "/day-trip",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadFile.upload.fields([{ name: "image", maxCount: 40 }]),
+  parseBodyData,
+  validateRequest(TripServiceValidation.createDayTripServiceValidationSchema),
+  TripServiceController.createDayTripService,
+);
+
 // get all trip services DAY_TRIP
 router.get("/day-trip", TripServiceController.getDayTripTripServices);
 

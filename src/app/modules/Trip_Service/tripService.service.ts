@@ -228,6 +228,38 @@ const getByTheHourPopularTripServices = async (
 
 // ----------------- day trip -----------------
 
+// create day trip service
+const createDayTripService = async (
+  userId: string,
+  payload: ITripService,
+): Promise<TripService> => {
+  // check if user exists
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const result = await prisma.tripService.create({
+    data: {
+      ...payload,
+      userId: user.id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 // get all trip services DAY_TRIP
 const getDayTripTripServices = async (
   options: IPaginationOptions,
@@ -853,6 +885,7 @@ export const TripServiceService = {
   getByTheHourPopularTripServices,
 
   // the day trip
+  createDayTripService,
   getDayTripTripServices,
   getDayTripPopularTripServices,
   getDayTripTripServicesByFromLocationGroup,
