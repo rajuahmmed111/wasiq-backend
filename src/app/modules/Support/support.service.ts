@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiErrors";
 import prisma from "../../../shared/prisma";
-import { Prisma, SupportStatus, UserStatus } from "@prisma/client";
+import { Prisma, SupportStatus } from "@prisma/client";
 import { IFilterRequest } from "./support.interface";
 import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
