@@ -343,7 +343,7 @@ const getDayTripTripServicesByFromLocationGroup = async (
     AND: filters,
   };
 
-const trips = await prisma.tripService.findMany({
+  const trips = await prisma.tripService.findMany({
     where,
     skip,
     take: limit,
@@ -362,9 +362,9 @@ const trips = await prisma.tripService.findMany({
     },
   });
 
-  // group by "from"
+  // group by "from" location
   const groupedData = trips.reduce((acc: any[], trip) => {
-    const existingGroup = acc.find(item => item.from === trip.from);
+    const existingGroup = acc.find((item) => item.from === trip.from);
 
     if (existingGroup) {
       existingGroup.trips.push(trip);
@@ -377,7 +377,6 @@ const trips = await prisma.tripService.findMany({
 
     return acc;
   }, []);
-
 
   const total = await prisma.tripService.count({
     where,
@@ -593,6 +592,72 @@ const getPrivateTransferPopularTripServices = async (
   };
 };
 
+// get trip service PRIVATE_TRANSFER on the from location group
+const getPrivateTransferTripServicesByFromLocationGroup = async (
+  options: IPaginationOptions,
+): Promise<IGenericResponse<TripService[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const filters: Prisma.TripServiceWhereInput[] = [];
+
+  filters.push({
+    serviceType: ServiceType.PRIVATE_TRANSFER,
+    status: "ACTIVE",
+  });
+
+  const where: Prisma.TripServiceWhereInput = {
+    AND: filters,
+  };
+
+  const trips = await prisma.tripService.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { bookingCount: "desc" },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  // group by "from" location
+  const groupedData = trips.reduce((acc: any[], trip) => {
+    const existingGroup = acc.find((item) => item.from === trip.from);
+
+    if (existingGroup) {
+      existingGroup.trips.push(trip);
+    } else {
+      acc.push({
+        from: trip.from,
+        trips: [trip],
+      });
+    }
+
+    return acc;
+  }, []);
+
+  const total = await prisma.tripService.count({
+    where,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: groupedData,
+  };
+};
+
 // ----------------- airport transfer -----------------
 
 // get all trip services AIRPORT_TRANSFER
@@ -799,6 +864,7 @@ export const TripServiceService = {
   // transfer
   getPrivateTransferTripServices,
   getPrivateTransferPopularTripServices,
+  getPrivateTransferTripServicesByFromLocationGroup,
 
   // airport transfer
   getAirportTransferTripServices,

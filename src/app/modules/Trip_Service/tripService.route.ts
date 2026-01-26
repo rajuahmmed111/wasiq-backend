@@ -33,8 +33,6 @@ router.get(
   TripServiceController.getByTheHourPopularTripServices,
 );
 
-
-
 // ----------------- day trip -----------------
 
 // get all trip services DAY_TRIP
@@ -78,6 +76,12 @@ router.get(
 router.get(
   "/private-transfer/popular",
   TripServiceController.getPrivateTransferPopularTripServices,
+);
+
+// get trip service PRIVATE_TRANSFER on the from location group
+router.get(
+  "/private-transfer/from-location-group",
+  TripServiceController.getPrivateTransferTripServicesByFromLocationGroup,
 );
 
 // ----------------- airport transfer -----------------

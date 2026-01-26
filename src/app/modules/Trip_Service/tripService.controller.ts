@@ -226,6 +226,25 @@ const getPrivateTransferPopularTripServices = catchAsync(
   },
 );
 
+// get trip service PRIVATE_TRANSFER on the from location group
+const getPrivateTransferTripServicesByFromLocationGroup = catchAsync(
+  async (req: Request, res: Response) => {
+    const options = pick(req.query, paginationFields);
+    const result =
+      await TripServiceService.getPrivateTransferTripServicesByFromLocationGroup(
+        options,
+      );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        "PRIVATE_TRANSFER Trip services retrieved successfully by from location group",
+      data: result,
+    });
+  },
+);
+
 // ----------------- airport transfer -----------------
 
 // get all trip services AIRPORT_TRANSFER
@@ -350,6 +369,7 @@ export const TripServiceController = {
   // transfer
   getPrivateTransferTripServices,
   getPrivateTransferPopularTripServices,
+  getPrivateTransferTripServicesByFromLocationGroup,
 
   // airport transfer
   getAirportTransferTripServices,
