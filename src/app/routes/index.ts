@@ -16,6 +16,7 @@ import { messageRoutes } from "../modules/Message/message.route";
 import { notificationsRoute } from "../modules/Notification/notification.route";
 import { tripServiceRoutes } from "../modules/Trip_Service/tripService.route";
 import { vehicleRoutes } from "../modules/Vehicle/vehicle.route";
+import { blogRoutes } from "../modules/Blog/blog.route";
 
 const router = express.Router();
 
@@ -37,6 +38,11 @@ const moduleRoutes = [
   {
     path: "/vehicles",
     route: vehicleRoutes,
+  },
+
+  {
+    path: "/blogs",
+    route: blogRoutes,
   },
 
   {
