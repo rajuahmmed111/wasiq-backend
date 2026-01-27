@@ -1,17 +1,67 @@
 import { Prisma, CustomerContact } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { ICustomerContact, ICustomerContactFilters } from "./customerContact.interface";
+import {
+  ICustomerContact,
+  ICustomerContactFilters,
+} from "./customerContact.interface";
 import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
 import { IGenericResponse } from "../../../interfaces/common";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
+import emailSender from "../../../helpars/emailSender";
 
 // create customer contact
-const createCustomerContact = async (payload: ICustomerContact): Promise<CustomerContact> => {
+const createCustomerContact = async (
+  payload: ICustomerContact,
+): Promise<CustomerContact> => {
   const result = await prisma.customerContact.create({
     data: payload,
   });
+
+  // send confirmation email to customer
+  const emailSubject =
+    "Thank you for contacting us - We've received your message";
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #333; text-align: center;">Thank You for Contacting Us!</h2>
+      <p style="color: #666; line-height: 1.6;">
+        Dear ${payload.fullName},
+      </p>
+      <p style="color: #666; line-height: 1.6;">
+        We have successfully received your message regarding "<strong>${payload.subject}</strong>". 
+        Our team will review your inquiry and get back to you as soon as possible.
+      </p>
+      <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="color: #333; margin-top: 0;">Your Contact Details:</h3>
+        <p style="color: #666; margin: 5px 0;"><strong>Name:</strong> ${payload.fullName}</p>
+        <p style="color: #666; margin: 5px 0;"><strong>Email:</strong> ${payload.email}</p>
+        <p style="color: #666; margin: 5px 0;"><strong>Phone:</strong> ${payload.contactNumber}</p>
+        <p style="color: #666; margin: 5px 0;"><strong>Subject:</strong> ${payload.subject}</p>
+        ${payload.description ? `<p style="color: #666; margin: 5px 0;"><strong>Message:</strong> ${payload.description}</p>` : ""}
+      </div>
+      <p style="color: #666; line-height: 1.6;">
+        We typically respond within 24-48 hours during business days. If your matter is urgent, 
+        please don't hesitate to call us directly.
+      </p>
+      <p style="color: #666; line-height: 1.6;">
+        Best regards,<br>
+        The Customer Support Team
+      </p>
+      <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+        <p style="color: #999; font-size: 12px;">
+          This is an automated message. Please do not reply to this email.
+        </p>
+      </div>
+    </div>
+  `;
+
+  try {
+    await emailSender(emailSubject, payload.email, emailHtml);
+  } catch (error) {
+    console.error("Failed to send confirmation email:", error);
+    // don't throw error here, as the contact was created successfully
+  }
 
   return result;
 };
@@ -96,7 +146,9 @@ const getAllCustomerContacts = async (
 };
 
 // get single customer contact
-const getSingleCustomerContact = async (id: string): Promise<CustomerContact | null> => {
+const getSingleCustomerContact = async (
+  id: string,
+): Promise<CustomerContact | null> => {
   const result = await prisma.customerContact.findUnique({
     where: {
       id,

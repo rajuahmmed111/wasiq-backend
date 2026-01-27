@@ -28,23 +28,26 @@ export const getDateRange = (timeRange?: string) => {
   }
 };
 
-export const calculatePercentageChange = (previousValue: number, currentValue: number): {
+export const calculatePercentageChange = (
+  previousValue: number,
+  currentValue: number,
+): {
   percentage: number;
   isIncrease: boolean;
 } => {
   if (previousValue === 0) {
     return {
       percentage: currentValue > 0 ? 100 : 0,
-      isIncrease: currentValue > 0
+      isIncrease: currentValue > 0,
     };
   }
-  
+
   const change = ((currentValue - previousValue) / previousValue) * 100;
   return {
     percentage: Math.abs(Math.round(change)),
-    isIncrease: change >= 0
+    isIncrease: change >= 0,
   };
-}
+};
 
 export const calculateGrowth = (current: number, previous: number) => {
   if (previous === 0) return current > 0 ? 100 : 0;
@@ -79,7 +82,7 @@ export const getPreviousDateRange = (timeRange?: string) => {
       const startOfLastMonth = new Date(
         now.getFullYear(),
         now.getMonth() - 1,
-        1
+        1,
       );
       const endOfLastMonth = new Date(startOfThisMonth);
       endOfLastMonth.setMilliseconds(-1);
