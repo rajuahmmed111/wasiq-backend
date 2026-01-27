@@ -1,43 +1,70 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiErrors";
 import prisma from "../../../shared/prisma";
-import { Prisma, SupportStatus } from "@prisma/client";
+import { Prisma, SupportStatus, UserStatus, SupportType } from "@prisma/client";
 import { IFilterRequest } from "./support.interface";
 import { IPaginationOptions } from "../../../interfaces/paginations";
 import { paginationHelpers } from "../../../helpars/paginationHelper";
 import { searchableFields } from "./support.constant";
+// import { getDateRange } from "../../../helpars/filterByDate";
 
-// create multi day tour request
-const createSupport = async (userId: string, data: any) => {
-  const { fullName, email, contactNumber, subject, description, supportType } =
-    data;
+// create user-to-user report
+const createUserReport = async (
+  reporterId: string,
+  reportedUserId: string,
+  data: any
+) => {
+  const { subject, description, supportType } = data;
+  if (!subject || !description || !supportType) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "fields are required");
+  }
 
+  // find reporter user
+  const reporter = await prisma.user.findUnique({ where: { id: reporterId } });
+  if (!reporter) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Reporter not found");
+  }
+
+  // find reported user
+  const reportedUser = await prisma.user.findUnique({
+    where: { id: reportedUserId },
+  });
+  if (!reportedUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Reported user not found");
+  }
+
+  // create support with special data
   const support = await prisma.support.create({
     data: {
-      fullName,
-      email,
-      contactNumber,
-      subject,
+      userId: reporterId, // reporter creates the support
+      subject: `Report against ${reportedUser.fullName}`,
       description,
+      supportType,
+      fullName: reporter?.fullName,
+      email: reporter?.email,
+      contactNumber: reporter?.contactNumber,
+      reportedUserId: reportedUser?.id,
     },
   });
 
-  // create notification
+  // create notification for admins
   await prisma.notifications.create({
     data: {
-      title: "Multi Day Tour Request",
-      body: `A new multi day tour request has been received from ${support.fullName}`,
-      message: `Subject: ${support.subject}`,
+      title: "User Report Created",
+      body: `${reporter.fullName} has reported ${reportedUser.fullName}`,
+      message: `Report Subject: ${subject}`,
+      serviceTypes: "SUPPORT",
+      supportId: support.id,
     },
   });
 
   return support;
 };
 
-// get all multi day tour requests
+// get all support
 const getAllSupport = async (
   params: IFilterRequest,
-  options: IPaginationOptions,
+  options: IPaginationOptions
 ) => {
   const { limit, page, skip } = paginationHelpers.calculatedPagination(options);
 
@@ -81,6 +108,16 @@ const getAllSupport = async (
     where,
     skip,
     take: limit,
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+    },
     orderBy:
       options.sortBy && options.sortOrder
         ? {
@@ -90,6 +127,29 @@ const getAllSupport = async (
             createdAt: "desc",
           },
   });
+
+  const finalData = await Promise.all(
+    result.map(async (item) => {
+      let reportedUser = null;
+
+      if (item.reportedUserId) {
+        reportedUser = await prisma.user.findUnique({
+          where: { id: item.reportedUserId },
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+            profileImage: true,
+          },
+        });
+      }
+
+      return {
+        ...item,
+        reportedUser,
+      };
+    })
+  );
 
   const total = await prisma.support.count({
     where,
@@ -101,32 +161,166 @@ const getAllSupport = async (
       page,
       limit,
     },
-    data: result,
+    data: finalData,
   };
 };
 
-// get multi day tour request by id
+// get my support
+const getMySupport = async (userId: string) => {
+  // find user
+  const findUser = await prisma.user.findUnique({ where: { id: userId } });
+  if (!findUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const result = await prisma.support.findMany({
+    where: { userId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+    },
+  });
+
+  const finalData = await Promise.all(
+    result.map(async (item) => {
+      let reportedUser = null;
+
+      if (item.reportedUserId) {
+        reportedUser = await prisma.user.findUnique({
+          where: { id: item.reportedUserId },
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+            profileImage: true,
+          },
+        });
+      }
+
+      return {
+        ...item,
+        reportedUser,
+      };
+    })
+  );
+
+  return finalData;
+};
+
+// get support by id
 const getSupportById = async (id: string) => {
-  const result = await prisma.support.findUnique({ where: { id } });
+  const result = await prisma.support.findUnique({
+    where: { id },
+    include: {
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+    },
+  });
+
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, "Support not found");
   }
 
+  // find reported user
+  let reportedUser = null;
+
+  if (result.reportedUserId) {
+    reportedUser = await prisma.user.findUnique({
+      where: { id: result.reportedUserId },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        profileImage: true,
+      },
+    });
+  }
+
+  return {
+    ...result,
+    reportedUser,
+  };
+};
+
+// update my support
+const updateMySupport = async (
+  userId: string,
+  supportId: string,
+  data: any
+) => {
+  // find user
+  const findUser = await prisma.user.findUnique({
+    where: { id: userId, status: UserStatus.ACTIVE },
+  });
+  if (!findUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // find support
+  const findSupport = await prisma.support.findUnique({
+    where: { id: supportId, userId },
+  });
+  if (!findSupport) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Support not found");
+  }
+
+  const result = await prisma.support.update({
+    where: { id: supportId },
+    data,
+  });
   return result;
 };
 
-// update multi day tour request status
-const updateSupportStatus = async (supportId: string) => {
-  const result = await prisma.support.update({
+// delete my support
+const deleteMySupport = async (userId: string, supportId: string) => {
+  // find user
+  const findUser = await prisma.user.findUnique({
+    where: { id: userId, status: UserStatus.ACTIVE },
+  });
+  if (!findUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // find support
+  const findSupport = await prisma.support.findUnique({
+    where: { id: supportId, userId },
+  });
+  if (!findSupport) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Support not found");
+  }
+
+  const result = await prisma.support.delete({
+    where: { id: findSupport.id },
+  });
+  return result;
+};
+
+// delete support
+const deleteSupport = async (supportId: string) => {
+  const result = await prisma.support.delete({
     where: { id: supportId },
-    data: { status: SupportStatus.Closed },
   });
   return result;
 };
 
 export const SupportService = {
-  createSupport,
+  createUserReport,
   getAllSupport,
+  getMySupport,
   getSupportById,
-  updateSupportStatus,
+  updateMySupport,
+  deleteMySupport,
+  deleteSupport,
 };

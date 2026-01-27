@@ -7,20 +7,24 @@ import { pick } from "../../../shared/pick";
 import { filterField } from "./support.constant";
 import { paginationFields } from "../../../constants/pagination";
 
-// create multi day tour request
-const createSupport = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
-  const data = req.body;
-  const result = await SupportService.createSupport(userId, data);
+// create user report
+const createUserReport = catchAsync(async (req: Request, res: Response) => {
+  const reporterId = req.user?.id;
+  const { reportedUserId, ...data } = req.body;
+  const result = await SupportService.createUserReport(
+    reporterId,
+    reportedUserId,
+    data
+  );
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Multi Day Tour request submitted successfully",
+    message: "User report created successfully",
     data: result,
   });
 });
 
-// get all multi day tour requests
+// get all support
 const getAllSupport = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationFields);
@@ -28,39 +32,83 @@ const getAllSupport = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Multi Day Tour requests fetched successfully",
+    message: "Support fetched successfully",
     data: result,
   });
 });
 
-// get multi day tour request by id
+// get my support
+const getMySupport = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const result = await SupportService.getMySupport(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Support fetched successfully",
+    data: result,
+  });
+});
+
+// get support by id
 const getSupportById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await SupportService.getSupportById(id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Multi Day Tour request fetched successfully",
+    message: "Support fetched successfully",
     data: result,
   });
 });
 
-// update multi day tour request status
-const updateSupportStatus = catchAsync(async (req: Request, res: Response) => {
+// update my support
+const updateMySupport = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
   const supportId = req.params.supportId;
-  const result = await SupportService.updateSupportStatus(supportId);
+  const data = req.body;
+  const result = await SupportService.updateMySupport(userId, supportId, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Multi Day Tour request status updated successfully",
+    message: "Support updated successfully",
+    data: result,
+  });
+});
+
+// delete my support
+const deleteMySupport = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const supportId = req.params.supportId;
+  const result = await SupportService.deleteMySupport(userId, supportId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Support deleted successfully",
+    data: result,
+  });
+});
+
+// delete support
+const deleteSupport = catchAsync(async (req: Request, res: Response) => {
+  const supportId = req.params.supportId;
+  const result = await SupportService.deleteSupport(supportId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Support deleted successfully",
     data: result,
   });
 });
 
 export const SupportController = {
-  createSupport,
+  createUserReport,
   getAllSupport,
+  getMySupport,
   getSupportById,
-  updateSupportStatus,
+  updateMySupport,
+  deleteMySupport,
+  deleteSupport,
 };

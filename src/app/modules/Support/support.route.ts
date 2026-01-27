@@ -5,32 +5,83 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-// get all multi day tour requests
+// get all support
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  SupportController.getAllSupport,
+  SupportController.getAllSupport
 );
 
-// create multi day tour request
+// create user report
 router.post(
   "/",
-  auth(UserRole.USER, UserRole.AGENT),
-  SupportController.createSupport,
+  auth(
+    UserRole.USER,
+    UserRole.PROPERTY_OWNER,
+    UserRole.SERVICE_PROVIDER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN
+  ),
+  SupportController.createUserReport
 );
 
-// get multi day tour request by id
+// get my support
+router.get(
+  "/my-report",
+  auth(
+    UserRole.USER,
+    UserRole.PROPERTY_OWNER,
+    UserRole.SERVICE_PROVIDER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN
+  ),
+  SupportController.getMySupport
+);
+
+// get support by id
 router.get(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER, UserRole.AGENT),
-  SupportController.getSupportById,
+  auth(
+    UserRole.USER,
+    UserRole.PROPERTY_OWNER,
+    UserRole.SERVICE_PROVIDER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN
+  ),
+  SupportController.getSupportById
 );
 
-// update multi day tour request status
+// update my support
 router.patch(
-  "/update-support-status/:supportId",
+  "/update-my-support/:supportId",
+  auth(
+    UserRole.USER,
+    UserRole.PROPERTY_OWNER,
+    UserRole.SERVICE_PROVIDER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN
+  ),
+  SupportController.updateMySupport
+);
+
+// delete my support
+router.delete(
+  "/delete-my-support/:supportId",
+  auth(
+    UserRole.USER,
+    UserRole.PROPERTY_OWNER,
+    UserRole.SERVICE_PROVIDER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN
+  ),
+  SupportController.deleteMySupport
+);
+
+// delete support
+router.delete(
+  "/:supportId",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  SupportController.updateSupportStatus,
+  SupportController.deleteSupport
 );
 
 export const supportRoutes = router;
