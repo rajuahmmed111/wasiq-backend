@@ -13,11 +13,11 @@ const emailSender = async (subject: string, email: string, html: string) => {
       pass: config.emailSender.app_pass,
     },
   });
-// 
+  //
   const emailTransport = transporter;
 
   const mailOptions = {
-    from: `"Tim" <${config.emailSender.email}>`,
+    from: `"Wasiq Ali" <${config.emailSender.email}>`,
     to: email,
     subject,
     html,
