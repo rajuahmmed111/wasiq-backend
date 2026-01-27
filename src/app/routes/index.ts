@@ -92,7 +92,7 @@ const moduleRoutes = [
     route: financeRoutes,
   },
   {
-    path: "/supports",
+    path: "/reports",
     route: supportRoutes,
   },
 ];
