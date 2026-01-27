@@ -10,32 +10,17 @@ const router = express.Router();
 // get about App
 router.get("/about", auth(), SettingController.getAbout);
 
-// get customer contact info
-router.get(
-  "/customer-contact",
-  auth(),
-  SettingController.getCustomerContactInfo
-);
-
 //  create app about
 router.post(
   "/about",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  SettingController.createOrUpdateAbout
-);
-
-// create customer contact info
-router.post(
-  "/customer-contact",
-  // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  // validateRequest(settingValidation.customerContactInfo),
-  SettingController.createCustomerContactInfo
+  SettingController.createOrUpdateAbout,
 );
 
 // updateNotificationSettings only for admin
 router.patch(
   "/notification-settings",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  SettingController.updateNotificationSettings
+  SettingController.updateNotificationSettings,
 );
 export const settingRoute = router;
