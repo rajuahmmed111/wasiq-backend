@@ -1,0 +1,163 @@
+import { Prisma, CustomerContact } from "@prisma/client";
+import prisma from "../../../shared/prisma";
+import { ICustomerContact, ICustomerContactFilters } from "./customerContact.interface";
+import { IPaginationOptions } from "../../../interfaces/paginations";
+import { paginationHelpers } from "../../../helpars/paginationHelper";
+import { IGenericResponse } from "../../../interfaces/common";
+import ApiError from "../../../errors/ApiErrors";
+import httpStatus from "http-status";
+
+// create customer contact
+const createCustomerContact = async (payload: ICustomerContact): Promise<CustomerContact> => {
+  const result = await prisma.customerContact.create({
+    data: payload,
+  });
+
+  return result;
+};
+
+// get all customer contacts
+const getAllCustomerContacts = async (
+  filters: ICustomerContactFilters,
+  options: IPaginationOptions,
+): Promise<IGenericResponse<CustomerContact[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatedPagination(options);
+
+  const { search, minDate, maxDate } = filters;
+
+  const andConditions: Prisma.CustomerContactWhereInput[] = [];
+
+  // search by fullName, email, contactNumber, subject
+  if (search) {
+    andConditions.push({
+      OR: [
+        {
+          fullName: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          contactNumber: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          subject: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  // filter by date range
+  if (minDate || maxDate) {
+    const dateFilter: Prisma.DateTimeFilter = {};
+    if (minDate) dateFilter.gte = new Date(minDate);
+    if (maxDate) dateFilter.lte = new Date(maxDate);
+    andConditions.push({ createdAt: dateFilter });
+  }
+
+  const whereCondition: Prisma.CustomerContactWhereInput = {
+    AND: andConditions,
+  };
+
+  const result = await prisma.customerContact.findMany({
+    where: whereCondition,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
+  });
+
+  const total = await prisma.customerContact.count({
+    where: whereCondition,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+// get single customer contact
+const getSingleCustomerContact = async (id: string): Promise<CustomerContact | null> => {
+  const result = await prisma.customerContact.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Customer contact not found");
+  }
+
+  return result;
+};
+
+// update customer contact
+const updateCustomerContact = async (
+  id: string,
+  payload: Partial<ICustomerContact>,
+): Promise<CustomerContact> => {
+  // check if customer contact exists
+  const existingCustomerContact = await prisma.customerContact.findUnique({
+    where: { id },
+  });
+
+  if (!existingCustomerContact) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Customer contact not found");
+  }
+
+  const result = await prisma.customerContact.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
+// delete customer contact
+const deleteCustomerContact = async (id: string): Promise<CustomerContact> => {
+  // check if customer contact exists
+  const existingCustomerContact = await prisma.customerContact.findUnique({
+    where: { id },
+  });
+
+  if (!existingCustomerContact) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Customer contact not found");
+  }
+
+  const result = await prisma.customerContact.delete({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
+export const CustomerContactService = {
+  createCustomerContact,
+  getAllCustomerContacts,
+  getSingleCustomerContact,
+  updateCustomerContact,
+  deleteCustomerContact,
+};
