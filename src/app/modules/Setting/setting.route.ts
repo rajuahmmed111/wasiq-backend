@@ -17,7 +17,7 @@ router.post(
   SettingController.createOrUpdateAbout,
 );
 
-// updateNotificationSettings only for admin
+// updateNotificationSetting only for admin
 router.patch(
   "/notification-settings",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
